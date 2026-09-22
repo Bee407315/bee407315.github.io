@@ -1,32 +1,84 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>YokelBook PNG</title>
+<html><head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YokelBook V9 - PNG</title>
 <style>
-body{font-family:Arial;background:#f0f2f5;margin:0}
-.header{background:#1877f2;color:white;padding:15px;text-align:center;font-size:22px;font-weight:bold}
-.card{background:white;margin:12px;padding:15px;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-button{background:#1877f2;color:white;border:none;padding:10px 16px;border-radius:6px}
-input{width:90%;padding:10px;margin:6px 0;border:1px solid #ddd;border-radius:6px}
-</style>
-</head>
-<body>
-<div class="header">YokelBook 🇵🇬 NEW START</div>
-<div id="app" class="card">Loading...</div>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f0f2f5}
+.header{background:#1877f2;color:#fff;padding:14px;text-align:center;font-weight:bold;font-size:20px;position:sticky;top:0;z-index:10}
+.header span{background:#ffcc00;color:#000;padding:2px 6px;border-radius:4px}
+.wrap{max-width:600px;margin:auto;padding:10px}
+.card{background:#fff;border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 2px 5px rgba(0,0,0,.15)}
+input,textarea{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;margin:6px 0;font-size:15px}
+button{border:none;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer}
+.btn-blue{background:#1877f2;color:#fff}.btn-red{background:#d32f2f;color:#fff}.btn-gray{background:#e4e6eb}
+.post-img{width:100%;border-radius:10px;margin-top:8px}
+.actions{display:flex;gap:8px;margin-top:8px}
+.small{font-size:12px;color:#666}
+.topbar{display:flex;justify-content:space-between;align-items:center}
+</style></head><body>
+<div class="header">YokelBook <span>🇵🇬 V9 ULTRA</span></div>
+<div class="wrap">
+<div id="loginBox" class="card"></div>
+<div id="app" style="display:none">
+<div class="card topbar"><b id="hello"></b><button class="btn-gray" onclick="logout()">Logout</button></div>
+<div class="card">
+<textarea id="txt" placeholder="Wanem niupela? Toktok nau..."></textarea>
+<input id="img" placeholder="Paste image link (optional)">
+<button class="btn-blue" onclick="makePost()" style="width:100%;margin-top:6px">Postim 🚀</button>
+</div>
+<div id="feed"></div>
+</div></div>
 <script>
 let user=localStorage.getItem('yb_user')||'';
-function render(){
- let app=document.getElementById('app');
- if(!user){
-  app.innerHTML=`<h3>Welcome PNG!</h3><input id="u" placeholder="Your name"><br><button onclick="login()">Join YokelBook</button>`;
- } else {
-  app.innerHTML=`<h3>Mipla ${user}! 🎉</h3><p>Clean YokelBook V9 is LIVE!</p><button onclick="logout()">Logout</button><div class="card"><b>System:</b> Ready to build posts, likes, chat tonight!</div>`;
- }
+let posts=JSON.parse(localStorage.getItem('yb_posts')||'[]');
+function save(){localStorage.setItem('yb_posts',JSON.stringify(posts));}
+function renderLogin(){
+ let b=document.getElementById('loginBox');
+ b.innerHTML=`<h3>Welcome lo YokelBook! 🇵🇬</h3><p class=small>Tok Pisin Social bilong PNG</p><input id="u" placeholder="Nem bilong yu"><button class="btn-blue" style="width:100%;margin-top:8px" onclick="login()">Join YokelBook</button>`;
 }
-function login(){let v=document.getElementById('u').value;if(v){localStorage.setItem('yb_user',v);user=v;render();}}
-function logout(){localStorage.removeItem('yb_user');user='';render();}
-render();
-</script>
-</body>
-</html>
+function login(){
+ let v=document.getElementById('u').value.trim();if(!v)return;
+ localStorage.setItem('yb_user',v);user=v;init();
+}
+function logout(){localStorage.removeItem('yb_user');location.reload();}
+function init(){
+ if(!user){renderLogin();return;}
+ document.getElementById('loginBox').style.display='none';
+ document.getElementById('app').style.display='block';
+ document.getElementById('hello').innerText='Mipla '+user+'! 🎉';
+ renderFeed();
+}
+function makePost(){
+ let t=document.getElementById('txt').value.trim();let im=document.getElementById('img').value.trim();
+ if(!t&&!im)return alert('Raitim samting pastaim!');
+ posts.unshift({id:Date.now(),user,txt:t,img:im,likes:0,likedBy:[],comments:[],time:new Date().toLocaleString()});
+ document.getElementById('txt').value='';document.getElementById('img').value='';save();renderFeed();
+}
+function like(id){
+ let p=posts.find(x=>x.id==id);if(!p)return;
+ if(p.likedBy.includes(user)){p.likedBy=p.likedBy.filter(u=>u!=user);p.likes--;}else{p.likedBy.push(user);p.likes++;}
+ save();renderFeed();
+}
+function addComment(id){
+ let inp=document.getElementById('c-'+id);let v=inp.value.trim();if(!v)return;
+ let p=posts.find(x=>x.id==id);p.comments.push({user,text:v});save();renderFeed();
+}
+function delPost(id){if(confirm('Deletem dispela post?')){posts=posts.filter(p=>p.id!=id);save();renderFeed();}}
+function renderFeed(){
+ let f=document.getElementById('feed');if(!posts.length){f.innerHTML='<div class=card small>No posts yet. Yu nambawan! Postim nau.</div>';return;}
+ f.innerHTML=posts.map(p=>`
+ <div class=card>
+ <div class=topbar><b>${p.user}</b><span class=small>${p.time}</span></div>
+ ${p.txt?`<p>${p.txt}</p>`:''}
+ ${p.img?`<img class=post-img src="${p.img}" onerror="this.style.display='none'">`:''}
+ <div class=actions>
+ <button class=btn-gray onclick="like(${p.id})">❤️ ${p.likes} Like</button>
+ <button class=btn-gray onclick="document.getElementById('c-${p.id}').focus()">💬 ${p.comments.length}</button>
+ ${p.user==user?`<button class=btn-red onclick="delPost(${p.id})">Delete</button>`:''}
+ </div>
+ <div style="margin-top:8px">${p.comments.map(c=>`<div class=small><b>${c.user}:</b> ${c.text}</div>`).join('')}</div>
+ <div style="display:flex;gap:6px;margin-top:6px"><input id="c-${p.id}" placeholder="Raitim comment..."><button class=btn-blue onclick="addComment(${p.id})">Send</button></div>
+ </div>`).join('');
+}
+init();
+</script></body></html>
