@@ -3,69 +3,73 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>YOKEL BTY V16 PRO</title>
+<title>YOKEL BTY V17 PRO MAX</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;transition:.3s}
+*{box-sizing:border-box}body{margin:0;font-family:Arial}
 .light{background:#f0f2f5;color:#111}.dark{background:#0f172a;color:#eee}
-.header{background:linear-gradient(90deg,#000,#c00,#ffcc00);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:30;font-weight:900}
-.tabs{display:flex;gap:6px;background:var(--c);padding:8px;position:sticky;top:52px;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.tab{flex:1;padding:10px;border-radius:12px;text-align:center;font-weight:bold;cursor:pointer;border:2px solid transparent}
-.tab.active{background:linear-gradient(90deg,#000,#d32f2f);color:#fff;border-color:#ffcc00}
-.card{background:var(--c);border-radius:16px;padding:14px;margin:10px 0;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.header{background:linear-gradient(90deg,#000,#c00,#ffcc00);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;font-weight:900}
+.tabs{display:flex;gap:5px;background:var(--c);padding:8px;position:sticky;top:50px;z-index:40;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.tab{flex:1;padding:10px;border-radius:12px;text-align:center;font-weight:bold;cursor:pointer}
+.tab.active{background:linear-gradient(90deg,#000,#d32f2f);color:#fff;border:2px solid #ffcc00}
+.card{background:var(--c);border-radius:16px;padding:12px;margin:10px 0;box-shadow:0 4px 12px rgba(0,0,0,.12)}
 .light{--c:#fff}.dark{--c:#1e293b}
-input,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:12px;margin:6px 0;font-size:15px}
-button{border:none;border-radius:12px;padding:10px 16px;font-weight:bold;cursor:pointer}
-.btn-bty{background:linear-gradient(90deg,#000,#d32f2f);color:#fff}.btn-blue{background:#1877f2;color:#fff}.btn-red{background:#c00;color:#fff}.btn-gray{background:#e4e6eb;color:#111}.dark.btn-gray{background:#334155;color:#fff}
-.avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #ffcc00;background:#ddd}
-.post-img{width:100%;border-radius:14px;margin-top:10px;max-height:500px;object-fit:cover}
-.small{font-size:12px;opacity:.7}.live{background:#000;color:#0f0;padding:4px 10px;border-radius:20px;font-size:11px}
-.badge{background:#ffcc00;color:#000;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:900}
-.chat-box{height:320px;overflow-y:auto;border:1px solid #ddd;border-radius:12px;padding:8px;background:rgba(0,0,0,.02)}
-.msg{margin:6px 0;padding:8px 12px;border-radius:14px;max-width:75%}
-.me{background:#1877f2;color:#fff;margin-left:auto}.other{background:#e4e6eb;color:#111}
-.notif{position:fixed;top:70px;right:10px;background:#000;color:#ffcc00;padding:10px 16px;border-radius:12px;z-index:100;font-weight:bold;animation:slide.3s}
-@keyframes slide{from{transform:translateX(100%)}to{transform:translateX(0)}}
+input,textarea,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:12px;margin:6px 0;font-size:15px}
+button{border:none;border-radius:12px;padding:10px 14px;font-weight:bold;cursor:pointer}
+.btn-bty{background:linear-gradient(90deg,#000,#d32f2f);color:#fff}.btn-blue{background:#1877f2;color:#fff}.btn-red{background:#c00;color:#fff}.btn-gray{background:#e4e6eb;color:#111}
+.avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #ffcc00;background:#ddd}
+.post-img,.post-vid{width:100%;border-radius:14px;margin-top:8px;max-height:520px}
+.small{font-size:12px;opacity:.7}.live{background:#000;color:#0f0;padding:4px 10px;border-radius:20px;font-size:11px}.badge{background:#ffcc00;color:#000;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:900}
+.stories{display:flex;gap:10px;overflow-x:auto;padding:10px 0}
+.story{flex:0 0 68px;text-align:center;cursor:pointer}.story-ring{width:64px;height:64px;border-radius:50%;padding:3px;background:linear-gradient(45deg,#feda75,#d62976,#4f5bd5);display:flex;align-items:center;justify-content:center}
+.story-ring img{width:58px;height:58px;border-radius:50%;border:2px solid #fff;object-fit:cover}
+.notif-panel{position:fixed;top:55px;right:8px;width:300px;max-height:400px;overflow:auto;background:var(--c);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:100;display:none;padding:10px}
+.bell{position:relative;background:#fff;color:#000;padding:8px 12px;border-radius:20px;cursor:pointer;font-weight:900}
+.bell-count{position:absolute;top:-6px;right:-6px;background:#c00;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center}
+.chat-box{height:300px;overflow-y:auto;border:1px solid #ddd;border-radius:12px;padding:8px}
+.msg{margin:6px 0;padding:8px 12px;border-radius:14px;max-width:75%}.me{background:#1877f2;color:#fff;margin-left:auto}.other{background:#e4e6eb;color:#111}
 </style>
 </head>
 <body class="light">
 <div class="header">
-<span>YOKEL BTY 🇵🇬 <span class="badge">V16 PRO</span> <span class="live">● LIVE</span></span>
-<div style="display:flex;gap:6px"><button class="btn-gray" onclick="toggleMode()">🌙</button><button class="btn-gray" onclick="logout()">Out</button></div>
+<span>YOKEL BTY 🇵🇬 <span class="badge">V17 MAX</span> <span class="live">● LIVE</span></span>
+<div style="display:flex;gap:6px;align-items:center">
+<div class="bell" onclick="toggleNotifs()">🔔<span id="bellCount" class="bell-count" style="display:none">0</span></div>
+<button class="btn-gray" onclick="toggleMode()">🌙</button>
+<button class="btn-gray" onclick="logout()">Out</button>
 </div>
+</div>
+
+<div id="notifPanel" class="notif-panel card"><h3>🔔 Notifications</h3><div id="notifList" class="small">No notifications yet — like, follow, chat!</div><button class="btn-gray" style="width:100%;margin-top:8px" onclick="clearNotifs()">Clear</button></div>
 
 <div style="max-width:680px;margin:auto">
 <div id="loginBox" class="card"></div>
-
 <div id="app" style="display:none">
-<div class="tabs card" style="margin:0 10px;margin-top:10px">
+
+<div class="tabs card" style="margin:8px 10px">
 <div id="tab-feed" class="tab active" onclick="showTab('feed')">🏠 Feed</div>
-<div id="tab-users" class="tab" onclick="showTab('users')">👥 People</div>
-<div id="tab-chat" class="tab" onclick="showTab('chat')">💬 Chat</div>
-<div id="tab-profile" class="tab" onclick="showTab('profile')">👤 Profile</div>
+<div id="tab-users" class="tab" onclick="showTab('users')">👥</div>
+<div id="tab-chat" class="tab" onclick="showTab('chat')">💬</div>
+<div id="tab-profile" class="tab" onclick="showTab('profile')">👤</div>
 </div>
 
 <!-- FEED -->
-<div id="view-feed" style="padding:10px">
-<div class="card" style="display:flex;gap:10px;align-items:center"><img id="myAv" class="avatar"><div><b id="hello"></b><div class="small" id="online"></div></div><div style="margin-left:auto"><input type="file" id="avInput" accept="image/*" style="display:none"><button class="btn-gray" onclick="avInput.click()">📸 Avatar</button></div></div>
-<div class="card"><textarea id="txt" placeholder="Wanem niupela, BTY?"></textarea><input type="file" id="postFile" accept="image/*"><img id="preview" style="display:none;width:100%;border-radius:12px;margin-top:8px"><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-bty" style="flex:1" id="postBtn" onclick="makePost()">Postim to WORLD 🚀</button><button class="btn-gray" onclick="clearPreview()">Clear</button></div><div id="status" class="small"></div></div>
+<div id="view-feed" style="padding:0 10px">
+<div class="card"><div class="stories" id="storiesBar"><div class="story" onclick="addStory()"><div class="story-ring" style="background:#ddd"><span style="font-size:28px">+</span></div><div class="small">Add Story</div></div></div><input type="file" id="storyFile" accept="image/*,video/*" style="display:none"></div>
+<div class="card" style="display:flex;gap:10px;align-items:center"><img id="myAv" class="avatar"><div><b id="hello"></b><div class="small" id="online"></div></div><input type="file" id="avInput" accept="image/*" style="display:none"><button class="btn-gray" style="margin-left:auto" onclick="avInput.click()">📸</button></div>
+<div class="card"><textarea id="txt" placeholder="Wanem niupela BTY? Text, photo, video..."></textarea><div style="display:flex;gap:6px"><input type="file" id="postFile" accept="image/*" style="flex:1"><input type="file" id="postVideo" accept="video/*" style="flex:1"></div><img id="preview" style="display:none;width:100%;border-radius:12px;margin-top:8px"><video id="previewVid" controls style="display:none;width:100%;border-radius:12px;margin-top:8px"></video><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-bty" style="flex:1" id="postBtn" onclick="makePost()">Postim 🚀 (Photo/Video)</button><button class="btn-gray" onclick="clearPreview()">Clear</button></div><div id="status" class="small"></div></div>
 <div id="feed"></div>
 </div>
 
 <!-- USERS -->
-<div id="view-users" style="display:none;padding:10px"><div class="card"><h3>👥 All Yokel BTY People — Follow them!</h3><div class="small">Live users worldwide</div><div id="usersList" style="margin-top:10px"></div></div></div>
+<div id="view-users" style="display:none;padding:0 10px"><div class="card"><h3>👥 People — Follow + Chat</h3><div id="usersList"></div></div></div>
 
 <!-- CHAT -->
-<div id="view-chat" style="display:none;padding:10px">
-<div class="card"><h3>💬 Global Messenger</h3><div style="display:flex;gap:6px"><select id="chatTo" style="flex:1;padding:12px;border-radius:12px"><option>Select person to chat...</option></select><button class="btn-gray" onclick="loadChat()">Open</button></div><div id="chatBox" class="chat-box" style="margin-top:10px"><div class="small">Select user to start chat</div></div><div style="display:flex;gap:6px;margin-top:8px"><input id="chatMsg" placeholder="Write message..."><button class="btn-blue" onclick="sendChat()">Send</button></div></div>
-</div>
+<div id="view-chat" style="display:none;padding:0 10px"><div class="card"><h3>💬 Messenger</h3><select id="chatTo"></select><button class="btn-blue" style="width:100%;margin-top:6px" onclick="loadChat()">Open Chat</button><div id="chatBox" class="chat-box" style="margin-top:10px"></div><div style="display:flex;gap:6px;margin-top:8px"><input id="chatMsg" placeholder="Message..."><button class="btn-blue" onclick="sendChat()">Send</button></div></div></div>
 
 <!-- PROFILE -->
-<div id="view-profile" style="display:none;padding:10px">
-<div class="card" style="text-align:center"><img id="profAv" class="avatar" style="width:90px;height:90px"><h2 id="profName"></h2><div class="small" id="profStats"></div><textarea id="bio" placeholder="Write your bio — eg: Mi from Madang, laikim music..."></textarea><button class="btn-bty" style="width:100%;margin-top:8px" onclick="saveBio()">Save Bio 💾</button></div>
-<div class="card"><h3>Your Posts</h3><div id="myPosts"></div></div>
-</div>
+<div id="view-profile" style="display:none;padding:0 10px"><div class="card" style="text-align:center"><img id="profAv" class="avatar" style="width:90px;height:90px"><h2 id="profName"></h2><div class="small" id="profStats"></div><textarea id="bio" placeholder="Bio..."></textarea><button class="btn-bty" style="width:100%;margin-top:8px" onclick="saveBio()">Save Bio</button></div><div id="myPosts"></div></div>
 
 </div>
 </div>
@@ -73,33 +77,39 @@ button{border:none;border-radius:12px;padding:10px 16px;font-weight:bold;cursor:
 <script>
 const firebaseConfig={apiKey:"AIzaSyA7JJpeSfV-pY-XCtsdXLvITFQmAvZ8pKo",authDomain:"yokelbook-global.firebaseapp.com",projectId:"yokelbook-global",storageBucket:"yokelbook-global.firebasestorage.app",messagingSenderId:"1048288092483",appId:"1:1048288092483:web:0f6eb6073dfc94b0d3cff6"};
 firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
-let user=localStorage.getItem('yb_user')||'',mode=localStorage.getItem('yb_mode')||'light',avatars=JSON.parse(localStorage.getItem('yb_av')||'{}'),bios=JSON.parse(localStorage.getItem('yb_bio')||'{}'),postImg='',posting=false,currentChatTo='',allPosts=[],allUsers=[];
+let user=localStorage.getItem('yb_user')||'',mode=localStorage.getItem('yb_mode')||'light',avatars=JSON.parse(localStorage.getItem('yb_av')||'{}'),bios=JSON.parse(localStorage.getItem('yb_bio')||'{}'),postImg='',postVid='',posting=false,currentChatTo='',allPosts=[],allUsers=[],notifs=JSON.parse(localStorage.getItem('yb_notif')||'[]');
 document.body.className=mode;
 function toggleMode(){mode=mode=='light'?'dark':'light';document.body.className=mode;localStorage.setItem('yb_mode',mode);}
-function showTab(t){['feed','users','chat','profile'].forEach(x=>{document.getElementById('view-'+x).style.display=x==t?'block':'none';document.getElementById('tab-'+x).classList.toggle('active',x==t);});if(t=='profile')renderProfile();if(t=='users')renderUsers();}
-function notif(txt){let d=document.createElement('div');d.className='notif';d.innerText=txt;document.body.appendChild(d);setTimeout(()=>d.remove(),3000); if('Notification' in window && Notification.permission=='granted') new Notification('YOKEL BTY', {body:txt});}
-function renderLogin(){document.getElementById('loginBox').innerHTML='<h2>YOKEL BTY V16 PRO</h2><p class=small>Feed + Follow + Chat + Profile + Share</p><input id=u placeholder=Nem bilong yu><button class=btn-bty style="width:100%;padding:14px;margin-top:10px" onclick="login()">Join PRO 🚀</button>';}
+function showTab(t){['feed','users','chat','profile'].forEach(x=>{document.getElementById('view-'+x).style.display=x==t?'block':'none';document.getElementById('tab-'+x).classList.toggle('active',x==t);});if(t=='profile')renderProfile();}
+function toggleNotifs(){let p=document.getElementById('notifPanel');p.style.display=p.style.display=='block'?'none':'block';}
+function pushNotif(txt){notifs.unshift({txt,time:new Date().toLocaleTimeString()});if(notifs.length>20)notifs.pop();localStorage.setItem('yb_notif',JSON.stringify(notifs));renderNotifs();let c=document.getElementById('bellCount');c.innerText=notifs.length;c.style.display='flex';}
+function renderNotifs(){document.getElementById('notifList').innerHTML=notifs.map(n=>'<div style="padding:6px;border-bottom:1px solid #eee"><b>'+n.txt+'</b><div class=small>'+n.time+'</div></div>').join('')||'<div class=small>No notifications</div>';document.getElementById('bellCount').innerText=notifs.length;document.getElementById('bellCount').style.display=notifs.length?'flex':'none';}
+function clearNotifs(){notifs=[];localStorage.setItem('yb_notif',JSON.stringify(notifs));renderNotifs();}
+function renderLogin(){document.getElementById('loginBox').innerHTML='<h2>YOKEL BTY V17 MAX 🔔</h2><p class=small>Stories + Video + Bell + Chat</p><input id=u placeholder=Nem><button class=btn-bty style="width:100%;padding:14px;margin-top:10px" onclick="login()">Join MAX 🚀</button>';}
 function login(){let v=document.getElementById('u').value.trim();if(!v)return;localStorage.setItem('yb_user',v);location.reload();}function logout(){localStorage.removeItem('yb_user');location.reload();}
-function compress(f,max,qual,cb){let r=new FileReader();r.onload=e=>{let img=new Image();img.onload=()=>{let c=document.createElement('canvas');let w=img.width,h=img.height;if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',qual));};img.src=e.target.result;};r.readAsDataURL(f);}
-avInput.addEventListener('change',e=>{if(!e.target.files[0])return;compress(e.target.files[0],200,0.4,d=>{avatars[user]=d;localStorage.setItem('yb_av',JSON.stringify(avatars));myAv.src=d;profAv.src=d;notif('Avatar updated ✅');});});
-postFile.addEventListener('change',e=>{if(!e.target.files[0])return;status.innerText='Compressing...';compress(e.target.files[0],700,0.55,d=>{postImg=d;preview.src=d;preview.style.display='block';status.innerText='Ready ✅';});});
-function clearPreview(){postImg='';preview.style.display='none';postFile.value='';status.innerText='';}
-async function makePost(){if(posting)return;let t=txt.value.trim();if(!t&&!postImg)return;posting=true;postBtn.innerText='Posting...';await db.collection('posts').add({user,txt:t,img:postImg||'',likes:0,likedBy:[],comments:[],time:Date.now(),timeStr:new Date().toLocaleString()});txt.value='';clearPreview();posting=false;postBtn.innerText='Postim to WORLD 🚀';notif('Posted to world! 🌍');}
-async function likePost(id,likedBy,likes){let ref=db.collection('posts').doc(id);if((likedBy||[]).includes(user))await ref.update({likedBy:firebase.firestore.FieldValue.arrayRemove(user),likes:likes-1});else await ref.update({likedBy:firebase.firestore.FieldValue.arrayUnion(user),likes:likes+1});}
-async function addComment(id){let inp=document.getElementById('c-'+id);let v=inp.value.trim();if(!v)return;await db.collection('posts').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion({user,text:v})});inp.value='';}
+function compress(file,max,qual,cb){let r=new FileReader();r.onload=e=>{let img=new Image();img.onload=()=>{let c=document.createElement('canvas');let w=img.width,h=img.height;if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',qual));};img.src=e.target.result;};r.readAsDataURL(file);}
+document.getElementById('avInput').addEventListener('change',e=>{if(!e.target.files[0])return;compress(e.target.files[0],200,0.4,d=>{avatars[user]=d;localStorage.setItem('yb_av',JSON.stringify(avatars));myAv.src=d;profAv.src=d;pushNotif('Avatar updated ✅');});});
+document.getElementById('postFile').addEventListener('change',e=>{if(!e.target.files[0])return;status.innerText='Compressing photo...';compress(e.target.files[0],700,0.55,d=>{postImg=d;preview.src=d;preview.style.display='block';previewVid.style.display='none';postVid='';status.innerText='Photo ready ✅';});});
+document.getElementById('postVideo').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;if(f.size>8*1024*1024){alert('Video too big! Max 8MB for free storage');return;}let r=new FileReader();r.onload=ev=>{postVid=ev.target.result;previewVid.src=postVid;previewVid.style.display='block';preview.style.display='none';postImg='';status.innerText='Video ready ✅ (max 15 sec ideal)';};r.readAsDataURL(f);});
+document.getElementById('storyFile').addEventListener('change',e=>{if(!e.target.files[0])return;let f=e.target.files[0];compress(f,400,0.5,d=>{db.collection('stories').add({user,img:d,time:Date.now()});pushNotif('Story posted! 🔥');});});
+function addStory(){document.getElementById('storyFile').click();}
+function clearPreview(){postImg='';postVid='';preview.style.display='none';previewVid.style.display='none';postFile.value='';postVideo.value='';status.innerText='';}
+async function makePost(){if(posting)return;let t=txt.value.trim();if(!t&&!postImg&&!postVid)return alert('Write something!');posting=true;postBtn.innerText='Posting...';await db.collection('posts').add({user,txt:t,img:postImg||'',video:postVid||'',likes:0,likedBy:[],comments:[],time:Date.now(),timeStr:new Date().toLocaleString()});txt.value='';clearPreview();posting=false;postBtn.innerText='Postim 🚀 (Photo/Video)';pushNotif('Your post is LIVE! 🌍');}
+async function likePost(id,likedBy,likes,owner){let ref=db.collection('posts').doc(id);if((likedBy||[]).includes(user))await ref.update({likedBy:firebase.firestore.FieldValue.arrayRemove(user),likes:likes-1});else{await ref.update({likedBy:firebase.firestore.FieldValue.arrayUnion(user),likes:likes+1});if(owner!=user)pushNotif(owner+' got like ❤️ from you');}}
+async function addComment(id){let inp=document.getElementById('c-'+id);let v=inp.value.trim();if(!v)return;await db.collection('posts').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion({user,text:v})});inp.value='';pushNotif('Comment added 💬');}
 async function delPost(id){if(confirm('Delete?'))await db.collection('posts').doc(id).delete();}
-function sharePost(txt){if(navigator.share){navigator.share({title:'YOKEL BTY',text:txt,url:location.href});}else{navigator.clipboard.writeText(location.href+' - '+txt);notif('Link copied! Share it 📤');}}
-async function followUser(target){await db.collection('follows').add({from:user,to:target,time:Date.now()});notif('You followed '+target+' ✅');}
-function loadUsersFromPosts(posts){let set=new Set();posts.forEach(p=>set.add(p.user));allUsers=Array.from(set);let sel=document.getElementById('chatTo');sel.innerHTML='<option>Select person...</option>'+allUsers.filter(u=>u!=user).map(u=>'<option value="'+u+'">'+u+'</option>').join('');renderUsers();}
-function renderUsers(){let html=allUsers.map(u=>{let av=avatars[u]||'';let bio=bios[u]||'';return '<div class=card style="display:flex;gap:10px;align-items:center"><img class=avatar src="'+av+'"><div style="flex:1"><b>'+u+'</b> '+(u.includes('Yokel')?'<span class=badge>FOUNDER 👑</span>':'')+'<div class=small>'+(bio||'No bio')+'</div></div><button class=btn-bty onclick="followUser(\''+u+'\')">Follow</button><button class=btn-blue onclick="startChat(\''+u+'\')">Chat</button></div>';}).join('');document.getElementById('usersList').innerHTML=html||'<div class=small>No users yet</div>';}
+function sharePost(txt){if(navigator.share){navigator.share({title:'YOKEL BTY',text:txt,url:location.href});}else{navigator.clipboard.writeText(location.href);pushNotif('Link copied 📤');}}
+async function followUser(t){await db.collection('follows').add({from:user,to:t,time:Date.now()});pushNotif('You followed '+t+' ✅');}
+function loadUsersFromPosts(posts){let s=new Set();posts.forEach(p=>s.add(p.user));allUsers=Array.from(s);let sel=document.getElementById('chatTo');sel.innerHTML='<option>Select...</option>'+allUsers.filter(u=>u!=user).map(u=>'<option value="'+u+'">'+u+'</option>').join('');document.getElementById('usersList').innerHTML=allUsers.map(u=>{let av=avatars[u]||'';let bio=bios[u]||'';return '<div class=card style="display:flex;gap:10px;align-items:center"><img class=avatar src="'+av+'"><div style="flex:1"><b>'+u+'</b> '+(u.includes('Yokel')?'<span class=badge>FOUNDER 👑</span>':'')+'<div class=small>'+bio+'</div></div><button class=btn-bty onclick="followUser(\''+u+'\')">Follow</button><button class=btn-blue onclick="startChat(\''+u+'\')">Chat</button></div>';}).join('');renderStories(posts);}
+function renderStories(posts){db.collection('stories').orderBy('time','desc').limit(12).onSnapshot(snap=>{let html='<div class=story onclick="addStory()"><div class=story-ring" style="background:#ddd;display:flex;justify-content:center;align-items:center"><span style="font-size:28px">+</span></div><div class=small>Add</div></div>';snap.forEach(d=>{let s=d.data();let av=avatars[s.user]||'';html+='<div class=story><div class=story-ring><img src="'+(s.img||av)+'"></div><div class=small>'+s.user.slice(0,6)+'</div></div>';});document.getElementById('storiesBar').innerHTML=html;});}
 function startChat(u){showTab('chat');document.getElementById('chatTo').value=u;loadChat();}
 let chatUnsub=null;
-function loadChat(){let to=document.getElementById('chatTo').value;if(!to||to.includes('Select'))return;currentChatTo=to;if(chatUnsub)chatUnsub();let chatId=[user,to].sort().join('_');chatUnsub=db.collection('chats').doc(chatId).collection('messages').orderBy('time').onSnapshot(snap=>{let html='';snap.forEach(d=>{let m=d.data();html+='<div class="msg '+(m.from==user?'me':'other')+'"><b>'+m.from+':</b> '+m.text+'</div>';});document.getElementById('chatBox').innerHTML=html||'<div class=small>No messages yet, say hi!</div>';document.getElementById('chatBox').scrollTop=document.getElementById('chatBox').scrollHeight;});}
-async function sendChat(){let txt=document.getElementById('chatMsg').value.trim();if(!txt||!currentChatTo)return;let chatId=[user,currentChatTo].sort().join('_');await db.collection('chats').doc(chatId).collection('messages').add({from:user,to:currentChatTo,text:txt,time:Date.now()});document.getElementById('chatMsg').value='';}
-function saveBio(){let b=document.getElementById('bio').value.trim();bios[user]=b;localStorage.setItem('yb_bio',JSON.stringify(bios));notif('Bio saved ✅');}
-function renderProfile(){profName.innerText=user;profAv.src=avatars[user]||'';document.getElementById('bio').value=bios[user]||'';let my=allPosts.filter(p=>p.user==user);profStats.innerText=my.length+' posts • '+(my.reduce((s,p)=>s+(p.likes||0),0))+' likes total';let h=my.map(p=>'<div class=card><div class=small>'+p.timeStr+'</div><p>'+(p.txt||'')+'</p>'+(p.img?'<img class=post-img src="'+p.img+'">':'')+'<div class=small>❤️ '+(p.likes||0)+' 💬 '+(p.comments||[]).length+'</div></div>').join('');myPosts.innerHTML=h||'<div class=small>No posts yet</div>';}
-function listen(){db.collection('posts').orderBy('time','desc').onSnapshot(snap=>{let posts=[];snap.forEach(d=>posts.push({id:d.id,...d.data()}));allPosts=posts;online.innerText=posts.length+' posts • LIVE PRO • '+allUsers.length+' users';loadUsersFromPosts(posts);let feedHTML='';posts.forEach(p=>{let av=avatars[p.user]||'';let likedBy=p.likedBy||[];let comments=p.comments||[];feedHTML+='<div class=card><div style="display:flex;gap:10px;align-items:center"><img class=avatar src="'+av+'"><div><b>'+p.user+'</b> '+(p.user.includes('Yokel')?'<span class=badge>FOUNDER 👑</span>':'')+'<div class=small>'+(p.timeStr||'')+'</div></div><button class=btn-gray style="margin-left:auto" onclick="followUser(\''+p.user+'\')">Follow</button></div>'+(p.txt?'<p style="margin:10px 0">'+p.txt+'</p>':'')+(p.img?'<img class=post-img src="'+p.img+'">':'')+'<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><button class=btn-gray onclick="likePost(\''+p.id+'\','+JSON.stringify(likedBy).replace(/"/g,'&quot;')+','+(p.likes||0)+')">❤️ '+(p.likes||0)+'</button><button class=btn-gray>💬 '+comments.length+'</button><button class=btn-gray onclick="sharePost(\''+(p.txt||'').replace(/'/g,'')+'\')">📤 Share</button><button class=btn-blue onclick="startChat(\''+p.user+'\')">💬 Chat</button>'+(p.user==user?'<button class=btn-red onclick="delPost(\''+p.id+'\')">Del</button>':'')+'</div><div style="margin-top:8px">'+comments.map(c=>'<div class=small><b>'+c.user+':</b> '+c.text+'</div>').join('')+'</div><div style="display:flex;gap:6px;margin-top:8px"><input id="c-'+p.id+'" placeholder="Comment..."><button class=btn-blue onclick="addComment(\''+p.id+'\')">Send</button></div></div>';});feed.innerHTML=feedHTML||'<div class=card small>No posts yet!</div>';});}
-if(!user)renderLogin();else{loginBox.style.display='none';app.style.display='block';hello.innerText=user;myAv.src=avatars[user]||'';listen(); if('Notification' in window) Notification.requestPermission();}
+function loadChat(){let to=document.getElementById('chatTo').value;if(!to||to.includes('Select'))return;currentChatTo=to;if(chatUnsub)chatUnsub();let chatId=[user,to].sort().join('_');chatUnsub=db.collection('chats').doc(chatId).collection('messages').orderBy('time').onSnapshot(snap=>{let h='';snap.forEach(d=>{let m=d.data();h+='<div class="msg '+(m.from==user?'me':'other')+'"><b>'+m.from+':</b> '+m.text+'</div>';});document.getElementById('chatBox').innerHTML=h||'<div class=small>No messages</div>';document.getElementById('chatBox').scrollTop=9999;});}
+async function sendChat(){let t=document.getElementById('chatMsg').value.trim();if(!t||!currentChatTo)return;let chatId=[user,currentChatTo].sort().join('_');await db.collection('chats').doc(chatId).collection('messages').add({from:user,to:currentChatTo,text:t,time:Date.now()});document.getElementById('chatMsg').value='';pushNotif('Message sent to '+currentChatTo+' 💬');}
+function saveBio(){let b=document.getElementById('bio').value.trim();bios[user]=b;localStorage.setItem('yb_bio',JSON.stringify(bios));pushNotif('Bio saved ✅');}
+function renderProfile(){profName.innerText=user;profAv.src=avatars[user]||'';bio.value=bios[user]||'';let my=allPosts.filter(p=>p.user==user);profStats.innerText=my.length+' posts • '+my.reduce((s,p)=>s+(p.likes||0),0)+' likes';myPosts.innerHTML=my.map(p=>'<div class=card><div class=small>'+p.timeStr+'</div><p>'+(p.txt||'')+'</p>'+(p.img?'<img class=post-img src="'+p.img+'">':'')+(p.video?'<video class=post-vid controls src="'+p.video+'"></video>':'')+'</div>').join('');}
+function listen(){db.collection('posts').orderBy('time','desc').onSnapshot(snap=>{let posts=[];snap.forEach(d=>posts.push({id:d.id,...d.data()}));allPosts=posts;online.innerText=posts.length+' posts • VIDEO ON • LIVE MAX';loadUsersFromPosts(posts);let html='';posts.forEach(p=>{let av=avatars[p.user]||'';let lb=p.likedBy||[];let cm=p.comments||[];html+='<div class=card><div style="display:flex;gap:10px;align-items:center"><img class=avatar src="'+av+'"><div><b>'+p.user+'</b> '+(p.user.includes('Yokel')?'<span class=badge>FOUNDER 👑</span>':'')+'<div class=small>'+(p.timeStr||'')+'</div></div><button class=btn-gray style="margin-left:auto" onclick="followUser(\''+p.user+'\')">Follow</button></div>'+(p.txt?'<p>'+p.txt+'</p>':'')+(p.img?'<img class=post-img src="'+p.img+'">':'')+(p.video?'<video class=post-vid controls src="'+p.video+'"></video>':'')+'<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><button class=btn-gray onclick="likePost(\''+p.id+'\','+JSON.stringify(lb).replace(/"/g,'&quot;')+','+(p.likes||0)+',\''+p.user+'\')">❤️ '+(p.likes||0)+'</button><button class=btn-gray>💬 '+cm.length+'</button><button class=btn-gray onclick="sharePost(\''+(p.txt||'').replace(/'/g,'')+'\')">📤</button><button class=btn-blue onclick="startChat(\''+p.user+'\')">Chat</button>'+(p.user==user?'<button class=btn-red onclick="delPost(\''+p.id+'\')">Del</button>':'')+'</div><div style="margin-top:6px">'+cm.map(c=>'<div class=small><b>'+c.user+':</b> '+c.text+'</div>').join('')+'</div><div style="display:flex;gap:6px;margin-top:8px"><input id="c-'+p.id+'" placeholder=Comment><button class=btn-blue onclick="addComment(\''+p.id+'\')">Send</button></div></div>';});feed.innerHTML=html;});}
+if(!user)renderLogin();else{loginBox.style.display='none';app.style.display='block';hello.innerText=user;myAv.src=avatars[user]||'';listen();renderNotifs(); if('Notification' in window) Notification.requestPermission();}
 </script>
 </body>
 </html>
