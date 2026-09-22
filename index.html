@@ -3,116 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>YOKEL BTY V19 GOD MODE</title>
+<title>YOKEL BTY V20 FINAL BOSS</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial;transition:.2s}
 .light{background:#f0f2f5;color:#111}.dark{background:#0f172a;color:#eee}
 .header{background:linear-gradient(90deg,#000,#c00,#ffcc00);color:#fff;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;font-weight:900}
-.tabs{display:flex;gap:4px;background:var(--c);padding:6px;position:sticky;top:50px;z-index:50;overflow-x:auto}
-.tab{flex:1;min-width:55px;padding:8px 4px;border-radius:10px;text-align:center;font-weight:bold;cursor:pointer;font-size:12px}
+.tabs{display:flex;gap:3px;background:var(--c);padding:5px;position:sticky;top:48px;z-index:50;overflow-x:auto}
+.tab{flex:1;min-width:48px;padding:7px 3px;border-radius:9px;text-align:center;font-weight:bold;cursor:pointer;font-size:11px}
 .tab.active{background:linear-gradient(90deg,#000,#d32f2f);color:#fff;border:2px solid #ffcc00}
-.card{background:var(--c);border-radius:14px;padding:10px;margin:8px 0;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.card{background:var(--c);border-radius:14px;padding:10px;margin:7px 0;box-shadow:0 4px 12px rgba(0,0,0,.12);position:relative}
 .light{--c:#fff}.dark{--c:#1e293b}
-input,textarea,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:10px;margin:5px 0;font-size:14px}
-button{border:none;border-radius:10px;padding:8px 12px;font-weight:bold;cursor:pointer}
-.btn-bty{background:linear-gradient(90deg,#000,#d32f2f);color:#fff}.btn-blue{background:#1877f2;color:#fff}.btn-red{background:#c00;color:#fff}.btn-green{background:#00a400;color:#fff}.btn-gold{background:linear-gradient(90deg,#ffcc00,#ffb300);color:#000}.btn-gray{background:#e4e6eb;color:#111}
-.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #ffcc00;background:#ddd}
-.post-img,.post-vid{width:100%;border-radius:12px;margin-top:6px;max-height:500px}
-.small{font-size:11px;opacity:.7}.live{background:#000;color:#0f0;padding:3px 8px;border-radius:14px;font-size:10px}.badge{background:#ffcc00;color:#000;padding:2px 6px;border-radius:8px;font-size:9px;font-weight:900}.verify{color:#1877f2}.price{color:#00a400;font-weight:900}
-.stories{display:flex;gap:8px;overflow-x:auto;padding:8px 0}.story{flex:0 0 60px;text-align:center;cursor:pointer}.story-ring{width:56px;height:56px;border-radius:50%;padding:2px;background:linear-gradient(45deg,#feda75,#d62976,#4f5bd5);display:flex;align-items:center;justify-content:center}.story-ring img{width:50px;height:50px;border-radius:50%;border:2px solid #fff;object-fit:cover}
-.notif-panel{position:fixed;top:54px;right:6px;width:310px;max-height:400px;overflow:auto;background:var(--c);border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.35);z-index:200;display:none;padding:8px;border:2px solid #ffcc00}
-.bell{position:relative;background:#fff;color:#000;padding:6px 10px;border-radius:16px;cursor:pointer;font-weight:900}.bell-count{position:absolute;top:-5px;right:-5px;background:#c00;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center}
-.chat-box{height:300px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:6px}.msg{margin:5px 0;padding:6px 10px;border-radius:12px;max-width:78%}.me{background:#1877f2;color:#fff;margin-left:auto}.other{background:#e4e6eb;color:#111}
-.admin-stat{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:linear-gradient(135deg,#000,#333);color:#ffcc00;padding:12px;border-radius:10px;text-align:center;font-weight:900}
-</style>
-</head>
-<body class="light">
-<div class="header">
-<span>YOKEL BTY 🇵🇬 <span class="badge">V19 GOD</span> <span class="live">● LIVE</span> <span id="bal">K0</span></span>
-<div style="display:flex;gap:4px;align-items:center">
-<div class="bell" onclick="toggleNotifs()">🔔<span id="bellCount" class="bell-count" style="display:none">0</span></div>
-<button class="btn-gray" onclick="toggleMode()">🌙</button>
-<button class="btn-gray" onclick="goLive()">🔴</button>
-<button class="btn-gray" onclick="logout()">Out</button>
-</div>
-</div>
-
-<div id="notifPanel" class="notif-panel card"><h3>🔔 + 💰</h3><div id="notifList" class="small"></div><button class="btn-gray" style="width:100%;margin-top:6px" onclick="clearNotifs()">Clear</button></div>
-<div id="livePanel" style="display:none;position:fixed;top:56px;left:0;right:0;z-index:150;background:#000;padding:8px;text-align:center"><video id="liveVideo" autoplay muted style="width:100%;max-width:480px;border-radius:12px"></video><div style="margin-top:6px"><button class="btn-red" onclick="stopLive()">End Live</button></div></div>
-
-<div style="max-width:680px;margin:auto">
-<div id="loginBox" class="card"></div>
-<div id="app" style="display:none">
-<div class="tabs card" style="margin:6px 8px">
-<div id="tab-feed" class="tab active" onclick="showTab('feed')">🏠</div>
-<div id="tab-market" class="tab" onclick="showTab('market')">🛒</div>
-<div id="tab-users" class="tab" onclick="showTab('users')">👥</div>
-<div id="tab-chat" class="tab" onclick="showTab('chat')">💬</div>
-<div id="tab-profile" class="tab" onclick="showTab('profile')">👤</div>
-<div id="tab-admin" class="tab" style="display:none" onclick="showTab('admin')">👑 ADMIN</div>
-</div>
-
-<div id="view-feed" style="padding:0 8px">
-<div class="card"><div class="stories" id="storiesBar"></div><input type="file" id="storyFile" accept="image/*" style="display:none"></div>
-<div class="card" style="display:flex;gap:8px;align-items:center"><img id="myAv" class="avatar"><div><b id="hello"></b> <span class="verify">✔️</span> <span id="myBal" class="badge" style="background:#00a400;color:#fff">K100</span><div class="small" id="online"></div></div><input type="file" id="avInput" accept="image/*" style="display:none"><button class="btn-gray" style="margin-left:auto" onclick="avInput.click()">📸</button></div>
-<div class="card"><textarea id="txt" placeholder="Wanem niupela? Buai? Phone?"></textarea><div style="display:flex;gap:5px"><input type="file" id="postFile" accept="image/*" style="flex:1"><input type="file" id="postVideo" accept="video/*" style="flex:1"></div><div style="display:flex;gap:5px"><input id="price" type="number" placeholder="Price K" style="flex:1"><select id="postType" style="flex:1"><option value="post">Normal</option><option value="market">🛒 Market — auto shows in Market tab!</option></select></div><img id="preview" style="display:none;width:100%;border-radius:10px;margin-top:6px"><video id="previewVid" controls style="display:none;width:100%;border-radius:10px;margin-top:6px"></video><div style="display:flex;gap:6px;margin-top:8px"><button class="btn-bty" style="flex:1" id="postBtn" onclick="makePost()">Postim 🚀 FIXED!</button><button class="btn-gray" onclick="clearPreview()">Clear</button></div><div id="status" class="small"></div></div>
-<input id="search" placeholder="🔍 Search posts, users..." oninput="doSearch()" style="margin:0 8px;width:calc(100% - 16px)">
-<div id="feed"></div>
-</div>
-
-<div id="view-market" style="display:none;padding:0 8px"><div class="card"><h3>🛒 Marketplace — V19 FIXED! Price + Buy works!</h3><div class="small">Tip: Post with price + select "Market" — auto appears here with Buy button!</div><div id="marketFeed"></div></div></div>
-<div id="view-users" style="display:none;padding:0 8px"><div class="card"><h3>👥 People + Gift Money 💰</h3><div id="usersList"></div></div></div>
-<div id="view-chat" style="display:none;padding:0 8px"><div class="card"><h3>💬 Messenger</h3><select id="chatTo"></select><button class="btn-blue" style="width:100%;margin-top:5px" onclick="loadChat()">Open</button><div id="chatBox" class="chat-box" style="margin-top:8px"></div><div style="display:flex;gap:5px;margin-top:6px"><input id="chatMsg" placeholder="Message..."><button class="btn-blue" onclick="sendChat()">Send</button></div></div></div>
-<div id="view-profile" style="display:none;padding:0 8px"><div class="card" style="text-align:center"><img id="profAv" class="avatar" style="width:90px;height:90px"><h2 id="profName"></h2><span class="verify">✔️ GOD Founder</span><div class="small" id="profStats"></div><div class="admin-stat" style="margin:8px 0"><div class="stat"><div id="statPosts">0</div>Posts</div><div class="stat"><div id="statLikes">0</div>Likes</div></div><textarea id="bio" placeholder="Bio..."></textarea><button class="btn-bty" style="width:100%;margin-top:6px" onclick="saveBio()">Save Bio</button></div><div id="myPosts"></div></div>
-<div id="view-admin" style="display:none;padding:0 8px"><div class="card"><h2>👑 GOD ADMIN PANEL — Only Yokel BTY</h2><div class="admin-stat"><div class="stat"><div id="aUsers">0</div>Users</div><div class="stat"><div id="aPosts">0</div>Posts</div><div class="stat"><div id="aMarket">0</div>Market</div><div class="stat"><div id="aLive">0</div>Live</div></div><h3>All Posts Control</h3><div id="adminPosts"></div><button class="btn-gold" style="width:100%;margin-top:10px" onclick="giveAllMoney()">💰 Give K50 to All Users!</button></div></div>
-
-</div>
-</div>
-
-<script>
-const firebaseConfig={apiKey:"AIzaSyA7JJpeSfV-pY-XCtsdXLvITFQmAvZ8pKo",authDomain:"yokelbook-global.firebaseapp.com",projectId:"yokelbook-global",storageBucket:"yokelbook-global.firebasestorage.app",messagingSenderId:"1048288092483",appId:"1:1048288092483:web:0f6eb6073dfc94b0d3cff6"};
-firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
-let user=localStorage.getItem('yb_user')||'',mode=localStorage.getItem('yb_mode')||'light',avatars=JSON.parse(localStorage.getItem('yb_av')||'{}'),bios=JSON.parse(localStorage.getItem('yb_bio')||'{}'),balances=JSON.parse(localStorage.getItem('yb_bal')||'{}'),postImg='',postVid='',posting=false,currentChatTo='',allPosts=[],allUsers=[],notifs=JSON.parse(localStorage.getItem('yb_notif')||'[]'),liveStream=null;
-if(!balances[user]){balances[user]=100;localStorage.setItem('yb_bal',JSON.stringify(balances));}
-document.body.className=mode;
-function toggleMode(){mode=mode=='light'?'dark':'light';document.body.className=mode;localStorage.setItem('yb_mode',mode);}
-function showTab(t){['feed','market','users','chat','profile','admin'].forEach(x=>{let v=document.getElementById('view-'+x);if(v)v.style.display=x==t?'block':'none';let tab=document.getElementById('tab-'+x);if(tab)tab.classList.toggle('active',x==t);});if(t=='profile')renderProfile();if(t=='admin')renderAdmin();}
-function toggleNotifs(){let p=document.getElementById('notifPanel');p.style.display=p.style.display=='block'?'none':'block';}
-function pushNotif(txt){notifs.unshift({txt,time:new Date().toLocaleTimeString()});if(notifs.length>25)notifs.pop();localStorage.setItem('yb_notif',JSON.stringify(notifs));renderNotifs();}
-function renderNotifs(){document.getElementById('notifList').innerHTML=notifs.map(n=>'<div style="padding:6px;border-bottom:1px solid #ddd"><b>'+n.txt+'</b><div class=small>'+n.time+'</div></div>').join('')||'<div class=small>No notifs yet</div>';let c=document.getElementById('bellCount');c.innerText=notifs.length;c.style.display=notifs.length?'flex':'none';}
-function clearNotifs(){notifs=[];localStorage.setItem('yb_notif',JSON.stringify(notifs));renderNotifs();}
-function renderLogin(){document.getElementById('loginBox').innerHTML='<h2>YOKEL BTY V19 GOD 💰👑</h2><p class=small>Admin + Money + Market FIXED + Analytics</p><input id=u placeholder=Nem><button class=btn-bty style="width:100%;padding:12px;margin-top:8px" onclick="login()">Join GOD 🚀</button>';}
-function login(){let v=document.getElementById('u').value.trim();if(!v)return;localStorage.setItem('yb_user',v);location.reload();}function logout(){localStorage.removeItem('yb_user');location.reload();}
-async function goLive(){try{let s=await navigator.mediaDevices.getUserMedia({video:true,audio:true});liveStream=s;liveVideo.srcObject=s;livePanel.style.display='block';db.collection('live').doc('now').set({user,time:Date.now(),active:true});pushNotif('LIVE 🔴');}catch(e){alert('Allow camera!');}}
-function stopLive(){if(liveStream)liveStream.getTracks().forEach(t=>t.stop());livePanel.style.display='none';db.collection('live').doc('now').update({active:false});}
-function compress(f,max,q,cb){let r=new FileReader();r.onload=e=>{let img=new Image();img.onload=()=>{let c=document.createElement('canvas');let w=img.width,h=img.height;if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',q));};img.src=e.target.result;};r.readAsDataURL(f);}
-avInput.addEventListener('change',e=>{if(!e.target.files[0])return;compress(e.target.files[0],200,0.4,d=>{avatars[user]=d;localStorage.setItem('yb_av',JSON.stringify(avatars));myAv.src=d;profAv.src=d;pushNotif('Avatar ✔️');});});
-postFile.addEventListener('change',e=>{if(!e.target.files[0])return;status.innerText='Compressing...';compress(e.target.files[0],700,0.55,d=>{postImg=d;preview.src=d;preview.style.display='block';previewVid.style.display='none';postVid='';status.innerText='Photo ready';});});
-postVideo.addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;if(f.size>8*1024*1024){alert('Max 8MB!');return;}let r=new FileReader();r.onload=ev=>{postVid=ev.target.result;previewVid.src=postVid;previewVid.style.display='block';preview.style.display='none';postImg='';status.innerText='Video ready';};r.readAsDataURL(f);});
-storyFile.addEventListener('change',e=>{if(!e.target.files[0])return;compress(e.target.files[0],400,0.5,d=>{db.collection('stories').add({user,img:d,time:Date.now()});pushNotif('Story 🔥');});});
-function clearPreview(){postImg='';postVid='';preview.style.display='none';previewVid.style.display='none';postFile.value='';postVideo.value='';price.value='';status.innerText='';}
-async function makePost(){if(posting)return;let t=txt.value.trim();let pr=price.value.trim();let ty=postType.value;if(!t&&!postImg&&!postVid)return alert('Write!');posting=true;postBtn.innerText='Posting...';await db.collection('posts').add({user,txt:t,img:postImg||'',video:postVid||'',price:pr,type:ty,time:Date.now(),timeStr:new Date().toLocaleString(),likes:0,likedBy:[],comments:[]});txt.value='';clearPreview();posting=false;postBtn.innerText='Postim 🚀 FIXED!';pushNotif(ty=='market'?'Market listed 🛒 K'+pr:'Post LIVE 🌍');}
-async function likePost(id,lb,likes,owner){let ref=db.collection('posts').doc(id);if((lb||[]).includes(user))await ref.update({likedBy:firebase.firestore.FieldValue.arrayRemove(user),likes:likes-1});else await ref.update({likedBy:firebase.firestore.FieldValue.arrayUnion(user),likes:likes+1});}
-async function addComment(id){let inp=document.getElementById('c-'+id);let v=inp.value.trim();if(!v)return;await db.collection('posts').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion({user,text:v})});inp.value='';}
-async function delPost(id){if(confirm('Delete?'))await db.collection('posts').doc(id).delete();}
-async function adminDel(id){if(confirm('ADMIN DELETE?'))await db.collection('posts').doc(id).delete();}
-function sharePost(t){if(navigator.share)navigator.share({title:'YOKEL',text:t,url:location.href});else{navigator.clipboard.writeText(location.href);pushNotif('Link copied 📤');}}
-async function followUser(t){await db.collection('follows').add({from:user,to:t,time:Date.now()});pushNotif('Followed '+t);}
-async function sendMoney(to){let amt=prompt('How much K to send to '+to+'? You have K'+(balances[user]||0));if(!amt)return;amt=parseInt(amt);if(amt>(balances[user]||0))return alert('No enough K!');balances[user]-=amt;balances[to]=(balances[to]||0)+amt;localStorage.setItem('yb_bal',JSON.stringify(balances));myBal.innerText='K'+balances[user];bal.innerText='K'+balances[user];pushNotif('Sent K'+amt+' to '+to+' 💰');await db.collection('gifts').add({from:user,to,amt,time:Date.now()});}
-function giveAllMoney(){if(!user.toLowerCase().includes('yokel'))return alert('Only Founder!');allUsers.forEach(u=>{balances[u]=(balances[u]||0)+50;});localStorage.setItem('yb_bal',JSON.stringify(balances));pushNotif('Gave K50 to all! 💰');alert('Gave K50 to everyone!');}
-function loadUsersFromPosts(posts){let s=new Set();posts.forEach(p=>s.add(p.user));allUsers=Array.from(s);let sel=document.getElementById('chatTo');sel.innerHTML='<option>Select...</option>'+allUsers.filter(u=>u!=user).map(u=>'<option value="'+u+'">'+u+'</option>').join('');usersList.innerHTML=allUsers.map(u=>{let av=avatars[u]||'';let bio=bios[u]||'';let b=balances[u]||0;return '<div class=card style="display:flex;gap:8px;align-items:center"><img class=avatar src="'+av+'"><div style="flex:1"><b>'+u+'</b> <span class=verify>✔️</span> '+(u.toLowerCase().includes('yokel')?'<span class=badge>FOUNDER 👑</span>':'')+' <span class=badge style="background:#00a400;color:#fff">K'+b+'</span><div class=small>'+bio+'</div></div><button class=btn-bty onclick="followUser(\''+u+'\')">Follow</button><button class=btn-gold onclick="sendMoney(\''+u+'\')">💰 Gift</button><button class=btn-blue onclick="startChat(\''+u+'\')">Chat</button></div>';}).join('');if(user.toLowerCase().includes('yokel'))document.getElementById('tab-admin').style.display='block';}
-function startChat(u){showTab('chat');chatTo.value=u;loadChat();}
-let chatUnsub=null;function loadChat(){let to=chatTo.value;if(!to||to.includes('Select'))return;currentChatTo=to;if(chatUnsub)chatUnsub();let id=[user,to].sort().join('_');chatUnsub=db.collection('chats').doc(id).collection('messages').orderBy('time').onSnapshot(snap=>{let h='';snap.forEach(d=>{let m=d.data();h+='<div class="msg '+(m.from==user?'me':'other')+'"><b>'+m.from+':</b> '+m.text+'</div>';});chatBox.innerHTML=h||'<div class=small>No msg</div>';chatBox.scrollTop=99999;});}
-async function sendChat(){let t=chatMsg.value.trim();if(!t||!currentChatTo)return;let id=[user,currentChatTo].sort().join('_');await db.collection('chats').doc(id).collection('messages').add({from:user,to:currentChatTo,text:t,time:Date.now()});chatMsg.value='';}
-function saveBio(){bios[user]=bio.value.trim();localStorage.setItem('yb_bio',JSON.stringify(bios));pushNotif('Bio saved');}
-function renderProfile(){profName.innerText=user;profAv.src=avatars[user]||'';bio.value=bios[user]||'';let my=allPosts.filter(p=>p.user==user);statPosts.innerText=my.length;statLikes.innerText=my.reduce((s,p)=>s+(p.likes||0),0);profStats.innerText=my.length+' posts • K'+(balances[user]||0);myPosts.innerHTML=my.map(p=>'<div class=card><div class=small>'+p.timeStr+(p.price?' • K'+p.price:'')+'</div><p>'+(p.txt||'')+'</p>'+(p.img?'<img class=post-img src="'+p.img+'">':'')+(p.video?'<video class=post-vid controls src="'+p.video+'"></video>':'')+'</div>').join('');}
-function renderAdmin(){aUsers.innerText=allUsers.length;aPosts.innerText=allPosts.length;aMarket.innerText=allPosts.filter(p=>p.type=='market').length;aLive.innerText='0';adminPosts.innerHTML=allPosts.map(p=>'<div class=card style="display:flex;gap:6px;align-items:center"><div style="flex:1"><b>'+p.user+'</b>: '+(p.txt||'').slice(0,40)+' '+(p.price?'K'+p.price:'')+'</div><button class=btn-red onclick="adminDel(\''+p.id+'\')">Del</button></div>').join('');}
-function doSearch(){let q=search.value.toLowerCase();if(!q){listen();return;}let filtered=allPosts.filter(p=>p.txt.toLowerCase().includes(q)||p.user.toLowerCase().includes(q));feed.innerHTML=filtered.map(p=>{let av=avatars[p.user]||'';let lb=p.likedBy||[];let cm=p.comments||[];return '<div class=card><div style="display:flex;gap:8px;align-items:center"><img class=avatar src="'+av+'"><div><b>'+p.user+'</b> <span class=verify>✔️</span><div class=small>'+p.timeStr+(p.price?' • K'+p.price:'')+'</div></div></div><p>'+p.txt+'</p>'+(p.img?'<img class=post-img src="'+p.img+'">':'')+(p.video?'<video class=post-vid controls src="'+p.video+'"></video>':'')+'<div style="display:flex;gap:5px;margin-top:8px"><button class=btn-gray onclick="likePost(\''+p.id+'\','+JSON.stringify(lb).replace(/"/g,'&quot;')+','+(p.likes||0)+',\''+p.user+'\')">❤️ '+(p.likes||0)+'</button></div></div>';}).join('');}
-function listen(){db.collection('posts').orderBy('time','desc').onSnapshot(snap=>{let posts=[];snap.forEach(d=>posts.push({id:d.id,...d.data()}));allPosts=posts;online.innerText=posts.length+' posts • MARKET FIXED • GOD MODE • '+allUsers.length+' users';loadUsersFromPosts(posts);let html='',mHtml='';posts.forEach(p=>{let av=avatars[p.user]||'';let lb=p.likedBy||[];let cm=p.comments||[];let card='<div class=card><div style="display:flex;gap:8px;align-items:center"><img class=avatar src="'+av+'"><div><b>'+p.user+'</b> <span class=verify>✔️</span> '+(p.user.toLowerCase().includes('yokel')?'<span class=badge>FOUNDER 👑</span>':'')+'<div class=small>'+(p.timeStr||'')+(p.price?' • <span class=price>K'+p.price+'</span>':'')+' '+(p.type=='market'?'<span class=badge style="background:#00a400;color:#fff">MARKET</span>':'')+'</div></div><button class=btn-gray style="margin-left:auto" onclick="followUser(\''+p.user+'\')">Follow</button></div>'+(p.txt?'<p>'+p.txt+'</p>':'')+(p.img?'<img class=post-img src="'+p.img+'">':'')+(p.video?'<video class=post-vid controls src="'+p.video+'"></video>':'')+'<div style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap"><button class=btn-gray onclick="likePost(\''+p.id+'\','+JSON.stringify(lb).replace(/"/g,'&quot;')+','+(p.likes||0)+',\''+p.user+'\')">❤️ '+(p.likes||0)+'</button><button class=btn-gray>💬 '+cm.length+'</button><button class=btn-gray onclick="sharePost(\''+(p.txt||'').replace(/'/g,'')+'\')">📤</button>'+(p.type=='market'?'<button class=btn-green onclick="buyItem(\''+p.user+'\',\''+(p.txt||'').replace(/'/g,'')+'\',\''+(p.price||'0')+'\')">🛒 Buy K'+(p.price||'0')+'</button>':'')+'<button class=btn-blue onclick="startChat(\''+p.user+'\')">Chat</button>'+(p.user==user?'<button class=btn-red onclick="delPost(\''+p.id+'\')">Del</button>':'')+'</div><div style="margin-top:5px">'+cm.map(c=>'<div class=small><b>'+c.user+':</b> '+c.text+'</div>').join('')+'</div><div style="display:flex;gap:5px;margin-top:6px"><input id="c-'+p.id+'" placeholder=Comment><button class=btn-blue onclick="addComment(\''+p.id+'\')">Send</button></div></div>';html+=card;if(p.type=='market'||p.price)mHtml+=card;});feed.innerHTML=html||'<div class=card>Post now!</div>';marketFeed.innerHTML=mHtml||'<div class=small>No market items — post with Price + select Market!</div>';if(document.getElementById('view-admin').style.display=='block')renderAdmin();});db.collection('stories').orderBy('time','desc').limit(15).onSnapshot(snap=>{let h='<div class=story onclick="storyFile.click()"><div class=story-ring style="background:#ddd;display:flex;align-items:center;justify-content:center"><span style="font-size:24px">+</span></div><div class=small>Add</div></div>';snap.forEach(d=>{let s=d.data();let av=avatars[s.user]||'';h+='<div class=story><div class=story-ring><img src="'+(s.img||av)+'"></div><div class=small>'+s.user.slice(0,6)+'</div></div>';});storiesBar.innerHTML=h;});}
-async function buyItem(u,t,price){alert('Contact '+u+' to buy: '+t+' for K'+price+'\nGo Chat → Message '+u);startChat(u);}
-if(!user)renderLogin();else{loginBox.style.display='none';app.style.display='block';hello.innerText=user;myAv.src=avatars[user]||'';myBal.innerText='K'+(balances[user]||100);bal.innerText='K'+(balances[user]||100);listen();renderNotifs();if(user.toLowerCase().includes('yokel'))document.getElementById('tab-admin').style.display='block';}
-</script>
-</body>
-</html>
+input,textarea,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:10px;margin:4px 0;font-size:14px}
+button{border:none;border-radius:10px;padding:7px 10px;font-weight:bold;cursor:pointer;font-size:12px}
+.btn-bty{background:linear-gradient(90deg,#000,#d32f2f);color:#fff}.btn-blue{background:#1877f2;color:#fff}.btn-red{background:#c00;color:#fff}.btn-green{background:#00a400;color:#fff}.btn-gold{background:linear-gradient(90deg,#ffcc00,#ffb300);color:#000;font-weight:900}.btn-gray{background:#e4e6eb;color:#111}
+.avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #ffcc00;background:#ddd}
+.post-img,.post-vid{width:100%;border-radius:12px;margin-top:5px;max-height:480px}
+.small{font-size:10px;opacity:.7}.badge{background:#ffcc00;color:#000;padding:2px 6px;border-radius:8px;font-size:9px;font-weight:900}.verify{color:#1877f2}.price{color:#00a400;font-weight:900}
+.promoted{border:2px solid #ffcc00;box-shadow:0 0 15px #ffcc00}.promoted::before{content:"🔥 PROMOTED AD • PAID K10";position:absolute;top:-8px;left:10px;background:#ffcc00;color:#000;font-size:8px;font-weight:900;padding:2px 6px;border-radius:6px}
+.stories{display:flex;gap:7px;overflow-x:auto;padding:6px 0}.story{flex:0 0 56px;text-align:center}.story-ring{width:52px;height:52px;border-radius:50%;padding:2px;background:linear-gradient(45deg,#feda75,#d62976,#4f5bd5);display:flex;align-items:center;justify-content:center}.story-ring img{width:46px;height:46px;border-radius:50%;border:2px solid #fff;object-fit:cover}
+.notif-panel{position:fixed;top:52px;right:5px;width:300px;max-height:380px;overflow:auto;background:var(--c);border-radius:12px;box-shadow:0 10px 26px rgba(0,0,0,.35);z-index:200;display:none;padding:8px;border:2px solid #ffcc00}
+.bell{position:relative;background:#fff;color:#000;padding:5px 9px;border-radius:14px;cursor:pointer;font-weight:900;font-size:13px}.bell-count{position:absolute;top:-5px;right:-5px;background:#c00;color:#fff;border-radius:50%;width:15px;height:15px;font-size:9px;display:flex;align-items:center;justify-content:center}
+.chat-box{
