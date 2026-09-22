@@ -3,92 +3,103 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>YOKEL BTY V15 FINAL</title>
+<title>YOKEL BTY V16 PRO</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial}
-.light{background:#f0f2f5;color:#111}
-.dark{background:#0f172a;color:#eee}
-.header{background:linear-gradient(90deg,#000,#c00,#ffcc00);color:#fff;padding:14px;display:flex;justify-content:space-between;position:sticky;top:0;z-index:20;font-weight:900}
-.card{background:var(--c);border-radius:16px;padding:14px;margin:12px 0;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial;transition:.3s}
+.light{background:#f0f2f5;color:#111}.dark{background:#0f172a;color:#eee}
+.header{background:linear-gradient(90deg,#000,#c00,#ffcc00);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:30;font-weight:900}
+.tabs{display:flex;gap:6px;background:var(--c);padding:8px;position:sticky;top:52px;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.tab{flex:1;padding:10px;border-radius:12px;text-align:center;font-weight:bold;cursor:pointer;border:2px solid transparent}
+.tab.active{background:linear-gradient(90deg,#000,#d32f2f);color:#fff;border-color:#ffcc00}
+.card{background:var(--c);border-radius:16px;padding:14px;margin:10px 0;box-shadow:0 4px 12px rgba(0,0,0,.12)}
 .light{--c:#fff}.dark{--c:#1e293b}
-input,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:12px;margin:6px 0}
+input,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:12px;margin:6px 0;font-size:15px}
 button{border:none;border-radius:12px;padding:10px 16px;font-weight:bold;cursor:pointer}
-.btn-bty{background:linear-gradient(90deg,#000,#d32f2f);color:#fff}
-.btn-blue{background:#1877f2;color:#fff}
-.btn-red{background:#c00;color:#fff}
-.btn-gray{background:#e4e6eb}
+.btn-bty{background:linear-gradient(90deg,#000,#d32f2f);color:#fff}.btn-blue{background:#1877f2;color:#fff}.btn-red{background:#c00;color:#fff}.btn-gray{background:#e4e6eb;color:#111}.dark.btn-gray{background:#334155;color:#fff}
 .avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #ffcc00;background:#ddd}
-.post-img{width:100%;border-radius:14px;margin-top:10px}
-.small{font-size:12px;opacity:.7}
-.live{background:#000;color:#0f0;padding:4px 10px;border-radius:20px;font-size:11px}
+.post-img{width:100%;border-radius:14px;margin-top:10px;max-height:500px;object-fit:cover}
+.small{font-size:12px;opacity:.7}.live{background:#000;color:#0f0;padding:4px 10px;border-radius:20px;font-size:11px}
 .badge{background:#ffcc00;color:#000;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:900}
+.chat-box{height:320px;overflow-y:auto;border:1px solid #ddd;border-radius:12px;padding:8px;background:rgba(0,0,0,.02)}
+.msg{margin:6px 0;padding:8px 12px;border-radius:14px;max-width:75%}
+.me{background:#1877f2;color:#fff;margin-left:auto}.other{background:#e4e6eb;color:#111}
+.notif{position:fixed;top:70px;right:10px;background:#000;color:#ffcc00;padding:10px 16px;border-radius:12px;z-index:100;font-weight:bold;animation:slide.3s}
+@keyframes slide{from{transform:translateX(100%)}to{transform:translateX(0)}}
 </style>
 </head>
 <body class="light">
 <div class="header">
-<span>YOKEL BTY 🇵🇬 <span class="badge">V15 FINAL</span> <span class="live">● LIVE</span></span>
-<button class="btn-gray" onclick="toggleMode()">🌙</button>
+<span>YOKEL BTY 🇵🇬 <span class="badge">V16 PRO</span> <span class="live">● LIVE</span></span>
+<div style="display:flex;gap:6px"><button class="btn-gray" onclick="toggleMode()">🌙</button><button class="btn-gray" onclick="logout()">Out</button></div>
 </div>
-<div style="max-width:640px;margin:auto;padding:10px">
+
+<div style="max-width:680px;margin:auto">
 <div id="loginBox" class="card"></div>
+
 <div id="app" style="display:none">
-<div class="card" style="display:flex;justify-content:space-between;align-items:center">
-<div style="display:flex;gap:10px;align-items:center">
-<img id="myAv" class="avatar">
-<div><b id="hello"></b><div class="small" id="online"></div></div>
+<div class="tabs card" style="margin:0 10px;margin-top:10px">
+<div id="tab-feed" class="tab active" onclick="showTab('feed')">🏠 Feed</div>
+<div id="tab-users" class="tab" onclick="showTab('users')">👥 People</div>
+<div id="tab-chat" class="tab" onclick="showTab('chat')">💬 Chat</div>
+<div id="tab-profile" class="tab" onclick="showTab('profile')">👤 Profile</div>
 </div>
-<div>
-<input type="file" id="avInput" accept="image/*" style="display:none">
-<button class="btn-gray" onclick="document.getElementById('avInput').click()">📸</button>
-<button class="btn-gray" onclick="localStorage.clear();location.reload();">RESET</button>
-</div>
-</div>
-<div class="card">
-<textarea id="txt" placeholder="Wanem niupela?"></textarea>
-<input type="file" id="postFile" accept="image/*">
-<img id="preview" style="display:none;width:100%;border-radius:12px;margin-top:8px">
-<div style="display:flex;gap:8px;margin-top:10px">
-<button class="btn-bty" style="flex:1" id="postBtn" onclick="makePost()">Postim to WORLD 🚀</button>
-<button class="btn-gray" onclick="clearPreview()">Clear</button>
-</div>
-<div id="status" class="small"></div>
-</div>
+
+<!-- FEED -->
+<div id="view-feed" style="padding:10px">
+<div class="card" style="display:flex;gap:10px;align-items:center"><img id="myAv" class="avatar"><div><b id="hello"></b><div class="small" id="online"></div></div><div style="margin-left:auto"><input type="file" id="avInput" accept="image/*" style="display:none"><button class="btn-gray" onclick="avInput.click()">📸 Avatar</button></div></div>
+<div class="card"><textarea id="txt" placeholder="Wanem niupela, BTY?"></textarea><input type="file" id="postFile" accept="image/*"><img id="preview" style="display:none;width:100%;border-radius:12px;margin-top:8px"><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-bty" style="flex:1" id="postBtn" onclick="makePost()">Postim to WORLD 🚀</button><button class="btn-gray" onclick="clearPreview()">Clear</button></div><div id="status" class="small"></div></div>
 <div id="feed"></div>
 </div>
+
+<!-- USERS -->
+<div id="view-users" style="display:none;padding:10px"><div class="card"><h3>👥 All Yokel BTY People — Follow them!</h3><div class="small">Live users worldwide</div><div id="usersList" style="margin-top:10px"></div></div></div>
+
+<!-- CHAT -->
+<div id="view-chat" style="display:none;padding:10px">
+<div class="card"><h3>💬 Global Messenger</h3><div style="display:flex;gap:6px"><select id="chatTo" style="flex:1;padding:12px;border-radius:12px"><option>Select person to chat...</option></select><button class="btn-gray" onclick="loadChat()">Open</button></div><div id="chatBox" class="chat-box" style="margin-top:10px"><div class="small">Select user to start chat</div></div><div style="display:flex;gap:6px;margin-top:8px"><input id="chatMsg" placeholder="Write message..."><button class="btn-blue" onclick="sendChat()">Send</button></div></div>
 </div>
+
+<!-- PROFILE -->
+<div id="view-profile" style="display:none;padding:10px">
+<div class="card" style="text-align:center"><img id="profAv" class="avatar" style="width:90px;height:90px"><h2 id="profName"></h2><div class="small" id="profStats"></div><textarea id="bio" placeholder="Write your bio — eg: Mi from Madang, laikim music..."></textarea><button class="btn-bty" style="width:100%;margin-top:8px" onclick="saveBio()">Save Bio 💾</button></div>
+<div class="card"><h3>Your Posts</h3><div id="myPosts"></div></div>
+</div>
+
+</div>
+</div>
+
 <script>
-const firebaseConfig={
-apiKey:"AIzaSyA7JJpeSfV-pY-XCtsdXLvITFQmAvZ8pKo",
-authDomain:"yokelbook-global.firebaseapp.com",
-projectId:"yokelbook-global",
-storageBucket:"yokelbook-global.firebasestorage.app",
-messagingSenderId:"1048288092483",
-appId:"1:1048288092483:web:0f6eb6073dfc94b0d3cff6"
-};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
-let user=localStorage.getItem('yb_user')||'';
-let mode=localStorage.getItem('yb_mode')||'light';
-let avatars=JSON.parse(localStorage.getItem('yb_av')||'{}');
-let postImg='';
-let posting=false;
+const firebaseConfig={apiKey:"AIzaSyA7JJpeSfV-pY-XCtsdXLvITFQmAvZ8pKo",authDomain:"yokelbook-global.firebaseapp.com",projectId:"yokelbook-global",storageBucket:"yokelbook-global.firebasestorage.app",messagingSenderId:"1048288092483",appId:"1:1048288092483:web:0f6eb6073dfc94b0d3cff6"};
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
+let user=localStorage.getItem('yb_user')||'',mode=localStorage.getItem('yb_mode')||'light',avatars=JSON.parse(localStorage.getItem('yb_av')||'{}'),bios=JSON.parse(localStorage.getItem('yb_bio')||'{}'),postImg='',posting=false,currentChatTo='',allPosts=[],allUsers=[];
 document.body.className=mode;
 function toggleMode(){mode=mode=='light'?'dark':'light';document.body.className=mode;localStorage.setItem('yb_mode',mode);}
-function renderLogin(){document.getElementById('loginBox').innerHTML='<h2>YOKEL BTY V15</h2><p class=small>FINAL FIX - No more disappearing!</p><input id=u placeholder=Nem><button class=btn-bty style="width:100%;padding:14px;margin-top:10px" onclick="login()">Join</button>';}
-function login(){let v=document.getElementById('u').value.trim();if(!v)return;localStorage.setItem('yb_user',v);location.reload();}
-function compress(file,max,qual,cb){let r=new FileReader();r.onload=e=>{let img=new Image();img.onload=()=>{let c=document.createElement('canvas');let w=img.width,h=img.height;if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',qual));};img.src=e.target.result;};r.readAsDataURL(file);}
-document.getElementById('avInput').addEventListener('change',e=>{if(!e.target.files[0])return;compress(e.target.files[0],200,0.4,d=>{avatars[user]=d;localStorage.setItem('yb_av',JSON.stringify(avatars));document.getElementById('myAv').src=d;});});
-document.getElementById('postFile').addEventListener('change',e=>{if(!e.target.files[0])return;document.getElementById('status').innerText='Compressing...';compress(e.target.files[0],600,0.5,d=>{postImg=d;document.getElementById('preview').src=d;document.getElementById('preview').style.display='block';document.getElementById('status').innerText='Ready ✅ Will NOT disappear!';});});
-function clearPreview(){postImg='';document.getElementById('preview').style.display='none';}
-async function makePost(){if(posting)return;let t=document.getElementById('txt').value.trim();if(!t&&!postImg)return;posting=true;document.getElementById('postBtn').innerText='Posting...';try{await db.collection('posts').add({user:user,txt:t,img:postImg||'',likes:0,likedBy:[],comments:[],time:Date.now(),timeStr:new Date().toLocaleString()});document.getElementById('txt').value='';clearPreview();}catch(e){alert(e.message);}posting=false;document.getElementById('postBtn').innerText='Postim to WORLD 🚀';}
+function showTab(t){['feed','users','chat','profile'].forEach(x=>{document.getElementById('view-'+x).style.display=x==t?'block':'none';document.getElementById('tab-'+x).classList.toggle('active',x==t);});if(t=='profile')renderProfile();if(t=='users')renderUsers();}
+function notif(txt){let d=document.createElement('div');d.className='notif';d.innerText=txt;document.body.appendChild(d);setTimeout(()=>d.remove(),3000); if('Notification' in window && Notification.permission=='granted') new Notification('YOKEL BTY', {body:txt});}
+function renderLogin(){document.getElementById('loginBox').innerHTML='<h2>YOKEL BTY V16 PRO</h2><p class=small>Feed + Follow + Chat + Profile + Share</p><input id=u placeholder=Nem bilong yu><button class=btn-bty style="width:100%;padding:14px;margin-top:10px" onclick="login()">Join PRO 🚀</button>';}
+function login(){let v=document.getElementById('u').value.trim();if(!v)return;localStorage.setItem('yb_user',v);location.reload();}function logout(){localStorage.removeItem('yb_user');location.reload();}
+function compress(f,max,qual,cb){let r=new FileReader();r.onload=e=>{let img=new Image();img.onload=()=>{let c=document.createElement('canvas');let w=img.width,h=img.height;if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',qual));};img.src=e.target.result;};r.readAsDataURL(f);}
+avInput.addEventListener('change',e=>{if(!e.target.files[0])return;compress(e.target.files[0],200,0.4,d=>{avatars[user]=d;localStorage.setItem('yb_av',JSON.stringify(avatars));myAv.src=d;profAv.src=d;notif('Avatar updated ✅');});});
+postFile.addEventListener('change',e=>{if(!e.target.files[0])return;status.innerText='Compressing...';compress(e.target.files[0],700,0.55,d=>{postImg=d;preview.src=d;preview.style.display='block';status.innerText='Ready ✅';});});
+function clearPreview(){postImg='';preview.style.display='none';postFile.value='';status.innerText='';}
+async function makePost(){if(posting)return;let t=txt.value.trim();if(!t&&!postImg)return;posting=true;postBtn.innerText='Posting...';await db.collection('posts').add({user,txt:t,img:postImg||'',likes:0,likedBy:[],comments:[],time:Date.now(),timeStr:new Date().toLocaleString()});txt.value='';clearPreview();posting=false;postBtn.innerText='Postim to WORLD 🚀';notif('Posted to world! 🌍');}
 async function likePost(id,likedBy,likes){let ref=db.collection('posts').doc(id);if((likedBy||[]).includes(user))await ref.update({likedBy:firebase.firestore.FieldValue.arrayRemove(user),likes:likes-1});else await ref.update({likedBy:firebase.firestore.FieldValue.arrayUnion(user),likes:likes+1});}
-async function addComment(id){let inp=document.getElementById('c-'+id);let v=inp.value.trim();if(!v)return;await db.collection('posts').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion({user:user,text:v})});inp.value='';}
+async function addComment(id){let inp=document.getElementById('c-'+id);let v=inp.value.trim();if(!v)return;await db.collection('posts').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion({user,text:v})});inp.value='';}
 async function delPost(id){if(confirm('Delete?'))await db.collection('posts').doc(id).delete();}
-function listen(){db.collection('posts').orderBy('time','desc').onSnapshot(snap=>{let posts=[];snap.forEach(d=>posts.push({id:d.id,...d.data()}));document.getElementById('online').innerText=posts.length+' posts • LIVE STABLE';let h='';posts.forEach(p=>{let av=avatars[p.user]||'';h+='<div class=card><div style="display:flex;gap:10px;align-items:center"><img class=avatar src="'+av+'"><div><b>'+p.user+'</b><div class=small>'+(p.timeStr||'')+'</div></div></div>'+(p.txt?'<p>'+p.txt+'</p>':'')+(p.img?'<img class=post-img src="'+p.img+'">':'')+'<div style="display:flex;gap:7px;margin-top:10px"><button class=btn-gray onclick="likePost(\''+p.id+'\','+JSON.stringify(p.likedBy||[]).replace(/"/g,'&quot;')+','+(p.likes||0)+')">❤️ '+(p.likes||0)+'</button><button class=btn-gray>💬 '+(p.comments||[]).length+'</button>'+(p.user==user?'<button class=btn-red onclick="delPost(\''+p.id+'\')">Del</button>':'')+'</div><div style="margin-top:6px">'+(p.comments||[]).map(c=>'<div class=small><b>'+c.user+':</b> '+c.text+'</div>').join('')+'</div><div style="display:flex;gap:6px;margin-top:8px"><input id="c-'+p.id+'" placeholder=Comment><button class=btn-blue onclick="addComment(\''+p.id+'\')">Send</button></div></div>';});document.getElementById('feed').innerHTML=h||'<div class=card small>No posts yet - you first!</div>';});}
-if(!user)renderLogin();else{document.getElementById('loginBox').style.display='none';document.getElementById('app').style.display='block';document.getElementById('hello').innerText=user;document.getElementById('myAv').src=avatars[user]||'';listen();}
+function sharePost(txt){if(navigator.share){navigator.share({title:'YOKEL BTY',text:txt,url:location.href});}else{navigator.clipboard.writeText(location.href+' - '+txt);notif('Link copied! Share it 📤');}}
+async function followUser(target){await db.collection('follows').add({from:user,to:target,time:Date.now()});notif('You followed '+target+' ✅');}
+function loadUsersFromPosts(posts){let set=new Set();posts.forEach(p=>set.add(p.user));allUsers=Array.from(set);let sel=document.getElementById('chatTo');sel.innerHTML='<option>Select person...</option>'+allUsers.filter(u=>u!=user).map(u=>'<option value="'+u+'">'+u+'</option>').join('');renderUsers();}
+function renderUsers(){let html=allUsers.map(u=>{let av=avatars[u]||'';let bio=bios[u]||'';return '<div class=card style="display:flex;gap:10px;align-items:center"><img class=avatar src="'+av+'"><div style="flex:1"><b>'+u+'</b> '+(u.includes('Yokel')?'<span class=badge>FOUNDER 👑</span>':'')+'<div class=small>'+(bio||'No bio')+'</div></div><button class=btn-bty onclick="followUser(\''+u+'\')">Follow</button><button class=btn-blue onclick="startChat(\''+u+'\')">Chat</button></div>';}).join('');document.getElementById('usersList').innerHTML=html||'<div class=small>No users yet</div>';}
+function startChat(u){showTab('chat');document.getElementById('chatTo').value=u;loadChat();}
+let chatUnsub=null;
+function loadChat(){let to=document.getElementById('chatTo').value;if(!to||to.includes('Select'))return;currentChatTo=to;if(chatUnsub)chatUnsub();let chatId=[user,to].sort().join('_');chatUnsub=db.collection('chats').doc(chatId).collection('messages').orderBy('time').onSnapshot(snap=>{let html='';snap.forEach(d=>{let m=d.data();html+='<div class="msg '+(m.from==user?'me':'other')+'"><b>'+m.from+':</b> '+m.text+'</div>';});document.getElementById('chatBox').innerHTML=html||'<div class=small>No messages yet, say hi!</div>';document.getElementById('chatBox').scrollTop=document.getElementById('chatBox').scrollHeight;});}
+async function sendChat(){let txt=document.getElementById('chatMsg').value.trim();if(!txt||!currentChatTo)return;let chatId=[user,currentChatTo].sort().join('_');await db.collection('chats').doc(chatId).collection('messages').add({from:user,to:currentChatTo,text:txt,time:Date.now()});document.getElementById('chatMsg').value='';}
+function saveBio(){let b=document.getElementById('bio').value.trim();bios[user]=b;localStorage.setItem('yb_bio',JSON.stringify(bios));notif('Bio saved ✅');}
+function renderProfile(){profName.innerText=user;profAv.src=avatars[user]||'';document.getElementById('bio').value=bios[user]||'';let my=allPosts.filter(p=>p.user==user);profStats.innerText=my.length+' posts • '+(my.reduce((s,p)=>s+(p.likes||0),0))+' likes total';let h=my.map(p=>'<div class=card><div class=small>'+p.timeStr+'</div><p>'+(p.txt||'')+'</p>'+(p.img?'<img class=post-img src="'+p.img+'">':'')+'<div class=small>❤️ '+(p.likes||0)+' 💬 '+(p.comments||[]).length+'</div></div>').join('');myPosts.innerHTML=h||'<div class=small>No posts yet</div>';}
+function listen(){db.collection('posts').orderBy('time','desc').onSnapshot(snap=>{let posts=[];snap.forEach(d=>posts.push({id:d.id,...d.data()}));allPosts=posts;online.innerText=posts.length+' posts • LIVE PRO • '+allUsers.length+' users';loadUsersFromPosts(posts);let feedHTML='';posts.forEach(p=>{let av=avatars[p.user]||'';let likedBy=p.likedBy||[];let comments=p.comments||[];feedHTML+='<div class=card><div style="display:flex;gap:10px;align-items:center"><img class=avatar src="'+av+'"><div><b>'+p.user+'</b> '+(p.user.includes('Yokel')?'<span class=badge>FOUNDER 👑</span>':'')+'<div class=small>'+(p.timeStr||'')+'</div></div><button class=btn-gray style="margin-left:auto" onclick="followUser(\''+p.user+'\')">Follow</button></div>'+(p.txt?'<p style="margin:10px 0">'+p.txt+'</p>':'')+(p.img?'<img class=post-img src="'+p.img+'">':'')+'<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><button class=btn-gray onclick="likePost(\''+p.id+'\','+JSON.stringify(likedBy).replace(/"/g,'&quot;')+','+(p.likes||0)+')">❤️ '+(p.likes||0)+'</button><button class=btn-gray>💬 '+comments.length+'</button><button class=btn-gray onclick="sharePost(\''+(p.txt||'').replace(/'/g,'')+'\')">📤 Share</button><button class=btn-blue onclick="startChat(\''+p.user+'\')">💬 Chat</button>'+(p.user==user?'<button class=btn-red onclick="delPost(\''+p.id+'\')">Del</button>':'')+'</div><div style="margin-top:8px">'+comments.map(c=>'<div class=small><b>'+c.user+':</b> '+c.text+'</div>').join('')+'</div><div style="display:flex;gap:6px;margin-top:8px"><input id="c-'+p.id+'" placeholder="Comment..."><button class=btn-blue onclick="addComment(\''+p.id+'\')">Send</button></div></div>';});feed.innerHTML=feedHTML||'<div class=card small>No posts yet!</div>';});}
+if(!user)renderLogin();else{loginBox.style.display='none';app.style.display='block';hello.innerText=user;myAv.src=avatars[user]||'';listen(); if('Notification' in window) Notification.requestPermission();}
 </script>
 </body>
 </html>
