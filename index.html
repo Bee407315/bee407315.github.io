@@ -1,84 +1,60 @@
 <!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>YokelBook V9 - PNG</title>
+<title>YokelBook V10 - PNG</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f0f2f5}
-.header{background:#1877f2;color:#fff;padding:14px;text-align:center;font-weight:bold;font-size:20px;position:sticky;top:0;z-index:10}
-.header span{background:#ffcc00;color:#000;padding:2px 6px;border-radius:4px}
-.wrap{max-width:600px;margin:auto;padding:10px}
-.card{background:#fff;border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 2px 5px rgba(0,0,0,.15)}
-input,textarea{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;margin:6px 0;font-size:15px}
-button{border:none;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer}
-.btn-blue{background:#1877f2;color:#fff}.btn-red{background:#d32f2f;color:#fff}.btn-gray{background:#e4e6eb}
-.post-img{width:100%;border-radius:10px;margin-top:8px}
-.actions{display:flex;gap:8px;margin-top:8px}
-.small{font-size:12px;color:#666}
-.topbar{display:flex;justify-content:space-between;align-items:center}
-</style></head><body>
-<div class="header">YokelBook <span>🇵🇬 V9 ULTRA</span></div>
-<div class="wrap">
-<div id="loginBox" class="card"></div>
-<div id="app" style="display:none">
-<div class="card topbar"><b id="hello"></b><button class="btn-gray" onclick="logout()">Logout</button></div>
-<div class="card">
-<textarea id="txt" placeholder="Wanem niupela? Toktok nau..."></textarea>
-<input id="img" placeholder="Paste image link (optional)">
-<button class="btn-blue" onclick="makePost()" style="width:100%;margin-top:6px">Postim 🚀</button>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;transition:.3s}
+body.light{background:#f0f2f5;color:#111}body.dark{background:#0f172a;color:#eee}
+.header{background:linear-gradient(90deg,#000,#d32f2f,#ffcc00);color:#fff;padding:12px;text-align:center;font-weight:bold;position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center}
+.card{background:var(--c);border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.light{--c:#fff}.dark{--c:#1e293b}
+input,textarea{width:100%;padding:11px;border:1px solid #ccc;border-radius:10px;margin:6px 0;font-size:15px}
+button{border:none;border-radius:10px;padding:9px 14px;font-weight:bold;cursor:pointer}
+.btn-blue{background:#1877f2;color:#fff}.btn-red{background:#d32f2f;color:#fff}.btn-gray{background:#e4e6eb;color:#000}
+.dark.btn-gray{background:#334155;color:#fff}
+.avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#ddd}
+.story-bar{display:flex;gap:8px;overflow-x:auto;padding:6px 0}
+.story{min-width:70px;background:var(--c);border-radius:12px;padding:6px;text-align:center;border:2px solid #1877f2}
+.post-img{width:100%;border-radius:12px;margin-top:8px;max-height:400px;object-fit:cover}
+.actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.small{font-size:12px;opacity:.7}
+</style></head><body class=light>
+<div class=header><span>YokelBook 🇵🇬 V10 LEGEND</span><button class=btn-gray onclick="toggleMode()">🌙/☀️</button></div>
+<div style="max-width:620px;margin:auto;padding:10px">
+<div id=loginBox class=card></div>
+<div id=app style="display:none">
+<div class="card" style="display:flex;justify-content:space-between;align-items:center">
+<div style="display:flex;align-items:center;gap:8px"><img id=myAv class=avatar><b id=hello></b></div>
+<div><input type=file id=avInput accept="image/*" style="display:none" onchange="setAvatar(event)"><button class=btn-gray onclick="document.getElementById('avInput').click()">📸</button><button class=btn-gray onclick="logout()">Logout</button></div>
 </div>
-<div id="feed"></div>
+<div class=card><div class=story-bar id=storyBar></div></div>
+<div class=card>
+<textarea id=txt placeholder="Wanem niupela Yokel? Toktok..."></textarea>
+<input type=file id=postFile accept="image/*" onchange="previewPost(event)">
+<img id=preview style="display:none;width:100%;border-radius:10px;margin-top:6px">
+<div style="display:flex;gap:6px;margin-top:8px"><button class=btn-blue style="flex:1" onclick="makePost()">Postim 🚀</button><button class=btn-gray onclick="clearPreview()">Clear</button></div>
+</div>
+<div id=feed></div>
 </div></div>
 <script>
-let user=localStorage.getItem('yb_user')||'';
-let posts=JSON.parse(localStorage.getItem('yb_posts')||'[]');
-function save(){localStorage.setItem('yb_posts',JSON.stringify(posts));}
-function renderLogin(){
- let b=document.getElementById('loginBox');
- b.innerHTML=`<h3>Welcome lo YokelBook! 🇵🇬</h3><p class=small>Tok Pisin Social bilong PNG</p><input id="u" placeholder="Nem bilong yu"><button class="btn-blue" style="width:100%;margin-top:8px" onclick="login()">Join YokelBook</button>`;
-}
-function login(){
- let v=document.getElementById('u').value.trim();if(!v)return;
- localStorage.setItem('yb_user',v);user=v;init();
-}
+let user=localStorage.getItem('yb_user')||'', mode=localStorage.getItem('yb_mode')||'light', posts=JSON.parse(localStorage.getItem('yb_posts10')||'[]'), avatars=JSON.parse(localStorage.getItem('yb_av')||'{}'), postImg='';
+document.body.className=mode;
+let myAvData=avatars[user]||'';
+function save(){localStorage.setItem('yb_posts10',JSON.stringify(posts));localStorage.setItem('yb_av',JSON.stringify(avatars));}
+function toggleMode(){mode=mode=='light'?'dark':'light';document.body.className=mode;localStorage.setItem('yb_mode',mode);}
+function renderLogin(){document.getElementById('loginBox').innerHTML=`<h3>YokelBook V10 🇵🇬</h3><p class=small>Strongpla PNG Social - Photo + Stories</p><input id=u placeholder="Nem bilong yu"><button class=btn-blue style="width:100%;margin-top:8px" onclick="login()">Join Legend</button>`;}
+function login(){let v=document.getElementById('u').value.trim();if(!v)return;localStorage.setItem('yb_user',v);user=v;location.reload();}
 function logout(){localStorage.removeItem('yb_user');location.reload();}
-function init(){
- if(!user){renderLogin();return;}
- document.getElementById('loginBox').style.display='none';
- document.getElementById('app').style.display='block';
- document.getElementById('hello').innerText='Mipla '+user+'! 🎉';
- renderFeed();
-}
-function makePost(){
- let t=document.getElementById('txt').value.trim();let im=document.getElementById('img').value.trim();
- if(!t&&!im)return alert('Raitim samting pastaim!');
- posts.unshift({id:Date.now(),user,txt:t,img:im,likes:0,likedBy:[],comments:[],time:new Date().toLocaleString()});
- document.getElementById('txt').value='';document.getElementById('img').value='';save();renderFeed();
-}
-function like(id){
- let p=posts.find(x=>x.id==id);if(!p)return;
- if(p.likedBy.includes(user)){p.likedBy=p.likedBy.filter(u=>u!=user);p.likes--;}else{p.likedBy.push(user);p.likes++;}
- save();renderFeed();
-}
-function addComment(id){
- let inp=document.getElementById('c-'+id);let v=inp.value.trim();if(!v)return;
- let p=posts.find(x=>x.id==id);p.comments.push({user,text:v});save();renderFeed();
-}
-function delPost(id){if(confirm('Deletem dispela post?')){posts=posts.filter(p=>p.id!=id);save();renderFeed();}}
-function renderFeed(){
- let f=document.getElementById('feed');if(!posts.length){f.innerHTML='<div class=card small>No posts yet. Yu nambawan! Postim nau.</div>';return;}
- f.innerHTML=posts.map(p=>`
- <div class=card>
- <div class=topbar><b>${p.user}</b><span class=small>${p.time}</span></div>
- ${p.txt?`<p>${p.txt}</p>`:''}
- ${p.img?`<img class=post-img src="${p.img}" onerror="this.style.display='none'">`:''}
- <div class=actions>
- <button class=btn-gray onclick="like(${p.id})">❤️ ${p.likes} Like</button>
- <button class=btn-gray onclick="document.getElementById('c-${p.id}').focus()">💬 ${p.comments.length}</button>
- ${p.user==user?`<button class=btn-red onclick="delPost(${p.id})">Delete</button>`:''}
- </div>
- <div style="margin-top:8px">${p.comments.map(c=>`<div class=small><b>${c.user}:</b> ${c.text}</div>`).join('')}</div>
- <div style="display:flex;gap:6px;margin-top:6px"><input id="c-${p.id}" placeholder="Raitim comment..."><button class=btn-blue onclick="addComment(${p.id})">Send</button></div>
- </div>`).join('');
-}
-init();
+function setAvatar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{avatars[user]=r.result;save();document.getElementById('myAv').src=r.result;renderStories();renderFeed();};r.readAsDataURL(f);}
+function previewPost(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{postImg=r.result;let p=document.getElementById('preview');p.src=postImg;p.style.display='block';};r.readAsDataURL(f);}
+function clearPreview(){postImg='';document.getElementById('preview').style.display='none';document.getElementById('postFile').value='';}
+function makePost(){let t=document.getElementById('txt').value.trim();if(!t&&!postImg)return alert('Raitim samting!');posts.unshift({id:Date.now(),user,txt:t,img:postImg,likes:0,likedBy:[],comments:[],time:new Date().toLocaleString()});document.getElementById('txt').value='';clearPreview();save();renderFeed();renderStories();}
+function like(id){let p=posts.find(x=>x.id==id);if(p.likedBy.includes(user)){p.likedBy=p.likedBy.filter(u=>u!=user);p.likes--;}else{p.likedBy.push(user);p.likes++;}save();renderFeed();}
+function addComment(id){let inp=document.getElementById('c-'+id);let v=inp.value.trim();if(!v)return;p=posts.find(x=>x.id==id);p.comments.push({user,text:v});save();renderFeed();}
+function delPost(id){if(confirm('Delete?')){posts=posts.filter(p=>p.id!=id);save();renderFeed();renderStories();}}
+function editPost(id){let p=posts.find(x=>x.id==id);let n=prompt('Editim post:',p.txt);if(n!==null){p.txt=n;save();renderFeed();}}
+function sharePost(id){let p=posts.find(x=>x.id==id);if(navigator.share){navigator.share({title:'YokelBook',text:p.txt,url:location.href});}else{prompt('Copy link:',location.href);}}
+function renderStories(){let bar=document.getElementById('storyBar');let users=[...new Set(posts.map(p=>p.user))];if(user&&!users.includes(user))users.unshift(user);bar.innerHTML=users.map(u=>`<div class=story><img class=avatar src="${avatars[u]||''}" style="margin:auto"><div class=small><b>${u}</b><br>✅ Story</div></div>`).join('')||`<div class=small>No stories yet</div>`;document.getElementById('myAv').src=avatars[user]||'';}
+function renderFeed(){let f=document.getElementById('feed');if(!posts.length){f.innerHTML='<div class=card small>Yu nambawan! Postim photo nau!</div>';return;}f.innerHTML=posts.map(p=>`<div class=card><div style="display:flex;gap:8px;align-items:center"><img class=avatar src="${avatars[p.user]||''}"><b>${p.user}</b><span class=small>${p.time}</span></div>${p.txt?`<p>${p.txt}</p>`:''}${p.img?`<img class=post-img src="${p.img}">`:''}<div class=actions><button class=btn-gray onclick="like(${p.id})">❤️ ${p.likes}</button><button class=btn-gray onclick="document.getElementById('c-${p.id}').focus()">💬 ${p.comments.length}</button><button class=btn-gray onclick="sharePost(${p.id})">↗️ Share</button>${p.user==user?`<button class=btn-gray onclick="editPost(${p.id})">✏️</button><button class=btn-red onclick="delPost(${p.id})">Del</button>`:''}</div><div style="margin-top:6px">${p.comments.map(c=>`<div class=small><b>${c.user}:</b> ${c.text}</div>`).join('')}</div><div style="display:flex;gap:6px;margin-top:6px"><input id="c-${p.id}" placeholder="Raitim comment..."><button class=btn-blue onclick="addComment(${p.id})">Send</button></div></div>`).join('');}
+if(!user)renderLogin();else{document.getElementById('loginBox').style.display='none';document.getElementById('app').style.display='block';document.getElementById('hello').innerText='Mipla '+user+'! 🔥';renderStories();renderFeed();}
 </script></body></html>
